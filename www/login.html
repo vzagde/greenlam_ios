@@ -1,0 +1,222 @@
+		<div class="green_header mobile-grid-100">
+			<a href="javascript:void(0);"><img src="images/menu_bar.png" class="menu_click" alt="" /></a>
+			<span class="green_text1">Log In</span>
+			<img src="images/header-peacock.png" class="peacock" alt="" />
+		</div>
+
+		<div style="margin-top:25%;" class="mobile-grid-100">
+			<a href="javascript:void(0);" class="fb_login" onclick="fb_login()"><img src="images/facebook-icon.png" class="fb_icon" alt="" /> Log in with Facebook</a>
+		</div>
+
+		<div style="margin-top:10%;" class="mobile-grid-100">	
+			<a href="javascript:void(0);" class="no_account">Don't have an account? Sign up now!</a>
+		</div>
+
+		<img src="images/login-hr-line.png" class="or_line" alt="" />
+		
+		<div class="mobile-grid-80 posr mobile-prefix-10">
+			<input type="text" name="name" placeholder="Name"  id="name_email" class="inpt">
+			<input type="password" name="password"  placeholder="Password" id="password_login" class="inpt">
+			<a  type="password" href="javascript:void(0);" class="forgot_pass">forgot your password?</a>
+			<div style="margin-top:5%;" class="mobile-grid-100"></div><a href="javascript:void(0);" onclick="user_login_function()" class="log_in">Login</a>
+		</div>
+
+		<!-- <div class="green_blank"></div> -->
+	<script type="text/javascript">
+			$('.menu_click').click(function(){
+				event.stopPropagation();
+				$('.menu').animate({ "left": "0" }, 100 );
+			});
+
+			$('.menu_close').click(function(){
+				$('.menu').animate({ "left": "-90%" }, 100 );
+			});
+
+		(function($) {
+	
+			'use strict';
+	
+			window.sr= new scrollReveal({
+			reset: true,
+			move: '50px',
+			mobile: true
+			});
+	
+		})();
+
+		$(".no_account").click(function(){
+			$("#login").fadeOut();
+		    $.ajax({
+		        url: base_url+'index.php/api/get_state',
+		        type: "POST",
+		        crossDomain: true,
+		        dataType: 'JSON',
+		        success: function(response){
+		            $("#state").empty();
+		            var text = "<option value='SELECT'>State</option>"
+		            $("#state").append(text);
+		            $.each(response, function(index, value){
+		                var text = "<option value='"+value.id+"'>"+value.state+"</option>";
+		                $("#state").append(text);
+		            })
+		        }
+		    })
+
+			$("#register").fadeIn();
+			$(":input").css("transform", "translateY(0px) scale(0.95)");
+			$(":input").animate({"opacity" : "1"});
+		})
+
+		function user_login_function(){
+	        var em_val = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+			if (!$("#name_email").val()) {
+				alert("Please Enter Your Email Id");
+			} else if (!$("#password_login").val()) {
+				alert("Please Enter Password");
+			} else if(!$('#name_email').val().match(em_val)){ 
+				alert("Please Enter Your Valid Email Id");
+			} else {
+	            $.ajax({
+	                url: base_url+'index.php/api/login_user',
+	                type: "POST",
+	                crossDomain: true,
+	                dataType: 'JSON',
+	                data: {
+	                    email : $("#name_email").val(),
+	                    password : $("#password_login").val(),
+	                },
+	                success: function(response){
+	                	console.log(form_status);
+	                	if (response.response == "Login") {
+	                		$("#login").fadeOut();
+	                		Lockr.set('user_token', response.token);
+	                		token = response.token;
+	                		id = response.id;
+	                		$("#menu_saved, #menu_myselection").show();
+	                		$("#profile_image").css("background", "url('"+response.profile+"') no-repeat");
+	                		$("#profile_bg").css("background", "url('"+response.profile+"') no-repeat");
+	                		$(".login_text").hide();
+	                		$("#user_acc_name").text(response.name);
+	                		$(".logout_text").show();
+			        		if (form_status == 'yes') {
+		                		$("#quote_name").val(response.name);
+		                		$("#quote_phone").val(response.phone);
+		                		$("#quote_email").val(response.email);
+			        			$("#form").fadeIn();
+			        			form_status = 'no';
+			        		} else if (lam_share_set_get != '') {
+			        			if (function_type == 'set') {
+				        			$.ajax({
+				        				url: base_url+'index.php/api/set',
+						                type: "POST",
+						                crossDomain: true,
+						                dataType: 'JSON',
+						                data: {
+						                    user_id : response.id,
+						                    type : "Set",
+						                    lam_id : lam_share_set_get,
+						                },
+						                success: function(response){
+						                	if (response == 'Success') {
+						                		alert("We have saved Laminate in your profile");
+						                	}
+						        			lam_share_set_get = '';
+						                }
+				        			})
+			        			}
+			        			// $("#saved").fadeIn();
+			        			load_saved_laminates();
+			        		} else {
+			        			$("#home").fadeIn();
+			        		}
+	                	} else {
+	                		alert("Account does not Exists for entered Email Id");
+	                		$("#login").fadeIn();
+	                	}
+	                }
+	            })
+			}
+		}
+
+		openFB.init('1007458002645274', '', window.localStorage);
+
+		function fb_login(){
+	        openFB.login('email',
+	            function() {
+	                get_info();
+	            },
+	            function() {
+
+	            }
+	        );
+		}
+
+	    function get_info(){
+	        openFB.api({
+	            path: '/me',
+	            success: function(fbData){
+	            	store_facebook_data(fbData);
+	            },
+	        });
+	    }
+
+	    function store_facebook_data(fbData){
+	        $.ajax({
+	            url: base_url+'index.php/api/fb_login',
+	            type: 'POST',
+	            dataType: 'json',
+	            async: false,
+	            crossDomain: true,
+	            data: {
+	                fbID: fbData.id,
+	                fbName: fbData.name,
+	                fbemail: fbData.email,
+	            },
+	            success: function(response){
+	            	console.log(response);
+	        		Lockr.set('user_token', response.token);
+	        		token = response.token;
+	        		id = response.id;
+	        		$("#menu_saved, #menu_myselection").show();
+	        		$("#profile_image").css("background", "url('"+response.profile+"') no-repeat");
+	        		$("#profile_image").css("background-size", "cover");
+	        		$("#profile_image").css("background-position", "center");
+	        		$("#profile_bg").css("background", "url('"+response.profile+"') no-repeat");
+	        		$(".login_text").hide();
+	        		$("#user_acc_name").text(response.name);
+	        		$(".logout_text").show();
+	        		$("#login").fadeOut();
+	        		if (form_status == 'yes') {
+                		$("#quote_name").val(response.name);
+                		$("#quote_phone").val(response.phone);
+                		$("#quote_email").val(response.email);
+	        			$("#form").fadeIn();
+	        			form_status = 'no';
+	        		} else if (lam_share_set_get != '') {
+	        			if (function_type == 'set') {
+		        			$.ajax({
+		        				url: base_url+'index.php/api/set',
+				                type: "POST",
+				                crossDomain: true,
+				                dataType: 'JSON',
+				                data: {
+				                    user_id : response.id,
+				                    type : "Set",
+				                    lam_id : lam_share_set_get,
+				                },
+				                success: function(response){
+				                	if (response == 'response') {
+				                		alert("We have saved Laminate in your profile");
+				                	}
+				                }
+		        			})
+	        			}
+	        			// $("#saved").fadeIn();
+	        			load_saved_laminates();
+	        		} else {
+	        			$("#home").fadeIn();
+	        		}
+	            }
+	        })
+	    }
+	</script>

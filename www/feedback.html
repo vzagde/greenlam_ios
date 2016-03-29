@@ -1,0 +1,71 @@
+		<div class="green_header mobile-grid-100">
+			<a href="javascript:void(0);"><img src="images/menu_bar.png" class="menu_click" alt="" /></a>
+			<span class="green_text1">Feedback</span>
+			<img src="images/header-peacock.png" class="peacock" alt="" />
+		</div>
+		<div class="mobile-grid-100 feed-title">
+			<h3>Feedback</h3>
+			<img src="images/hr-line.png"style="width:60%;margin-top:-15%;">
+		</div>
+
+		<div class="mobile-grid-100 form">
+				<textarea data-sr="wait 0.1s and then ease-in-out 100px" cols="36" rows="7" id="feedback_content" class="feed-text" placeholder="What's on your mind?"></textarea>
+				<input data-sr="wait 0.2s and then ease-in-out 100px" type="text" id="feedback_name" class="text" placeholder="Name">
+				<input data-sr="wait 0.3s and then ease-in-out 100px" type="email" class="text" id="feedback_email" placeholder="Email Id">
+				<div style="margin-top:5%;" class="mobile-grid-100"></div><a href="javascript:void(0);" data-sr="wait 0.4s and then ease-in-out 10px" id="feedback_submit" class="log_in" style="margin-right:7%;">Submit</a>
+		</div>
+		
+		<!-- <div class="green_blank"></div> -->
+	<script type="text/javascript">
+			$('.menu_click').click(function(){
+				event.stopPropagation();
+				$('.menu').animate({ "left": "0" }, 100 );
+			});
+
+			$('.menu_close').click(function(){
+				$('.menu').animate({ "left": "-90%" }, 100 );
+			});
+
+
+		(function($) {
+	
+			'use strict';
+	
+			window.sr= new scrollReveal({
+			reset: true,
+			move: '50px',
+			mobile: true
+			});
+	
+		})();
+
+		$("#feedback_submit").click(function(){
+	        var em_val = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+			if (!$("#feedback_content").val()) {
+				alert("Please Enter Your Message");
+			} else if (!$("#feedback_name").val()) {
+				alert("Please Enter Your Name");
+			} else if (!$("#feedback_email").val()) {
+				alert("Please Enter Your Email Id");
+			} else if(!$('#feedback_email').val().match(em_val)){
+				alert("Please Enter Valid Email Id");
+			} else {
+			    $.ajax({
+			        url: base_url+'index.php/api/feedback_submit',
+			        type: "POST",
+			        crossDomain: true,
+			        dataType: 'JSON',
+			        data: {name: $("#feedback_name").val(), email:$("#feedback_email").val(), content: $("#feedback_content").val()},
+			        success: function(response){
+			        	if (response.response == "Success") {
+				        	alert("Thank You for Your Feedback");
+				        	$("#feedback_content").val('');
+				        	$("#feedback_name").val('');
+				        	$("#feedback_email").val('');
+			        	}
+			        }
+			    })
+			}
+		})
+	</script>

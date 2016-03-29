@@ -1,0 +1,236 @@
+		<div class="green_header mobile-grid-100">
+			<a style="font-size:1em;" href="javascript:void(0);" onclick="gotohomescreen()" class="green_text"><img src="images/back1.png" class="back1" alt="" />Laminate Selector</a>
+			<img src="images/header-peacock.png" class="peacock" alt="" />
+		</div>
+		
+		<div class="color_selecter mobile-grid-100">
+			<p style="font-size:1em; margin-bottom:2%;" class="color_text">Selected Laminate</p>
+			<div id="disp_lam" class="color_picker">&nbsp;</div>
+		</div>
+			
+		<div class="laminate_tab mobile-grid-100 pad0">
+			<div class="laminate_tab_sub mobile-grid-100">
+				<div data-filter="Laminates" class="lam_tabs mobile-grid-50 pad0">
+					<p class="laminate_text lam_1">Matching <br /> Laminates</p>
+				</div>
+				<div data-filter="Complementry" style="margin-bottom:2%;" class="lam_tabs mobile-grid-50 pad0">
+					<p class="laminate_text lam_2">Complementary <br /> Laminates</p>
+				</div>
+				<div class="gray_blank mobile-grid-100 pad0"><div class="green_animate"></div></div>
+			</div>	
+			<div class="mobile-grid-100">
+				<div id="laminates" class="laminate_box cat_box1 posr mobile-grid-100 pad0">
+				</div> 
+			</div>
+		</div>
+		
+		<div class="ovr_lay lam_share hide">
+			<div class="share_overlay">
+				<img src="images/cross.png" class="shr_close" alt="" />
+				<p class="share_text">Share via</p>
+				<div class="mobile-grid-100">
+					<div class="mobile-grid-100"><img src="images/s1.png" onclick="share_mail()" class="s_1" alt="" /></div>
+					<div class="mobile-grid-100"><img src="images/s2.png" onclick="share_facebook()" class="s_1" alt="" /></div>
+					<div class="mobile-grid-100"><img src="images/s3.png" onclick="share_whatsapp()" class="s_1" alt="" /></div>
+					<div class="mobile-grid-100"><img src="images/s4.png" onclick="share_message()" class="s_1" alt="" /></div>
+				</div>
+			</div>
+		</div>
+		
+		<a href="javascript:void(0);" onclick="gotoEdgeband()" class="proceed_click">Proceed to Select Laminate</a>
+		<div class="green_blank"></div>
+	<script type="text/javascript">
+		(function($) {
+	
+			'use strict';
+	
+			window.sr= new scrollReveal({
+			reset: true,
+			move: '50px',
+			mobile: true
+			});
+	
+		})();
+
+		function share_mail(){
+			$.ajax({
+				url : base_url+'index.php/api/get_laminates_for_share',
+				type: 'POST',
+				dataType : 'JSON',
+				crossDomain: true,
+				data: {id: lam_share_set_get},
+				success : function(response){
+					window.open('mailto:?&body='+response.content, '_system');
+				}
+			})
+		}
+		function share_facebook(){
+			window.open('https://www.facebook.com/sharer/sharer.php?u=http%3A//www.greenlam.com/', '_system');
+		}
+
+		function share_whatsapp(){
+			$.ajax({
+				url : base_url+'index.php/api/get_laminates_for_share',
+				type: 'POST',
+				dataType : 'JSON',
+				crossDomain: true,
+				data: {id: lam_share_set_get},
+				success : function(response){
+					window.open('whatsapp://send?text='+response.content, '_system');
+				}
+			})
+		}
+
+		function share_message(){
+			$.ajax({
+				url : base_url+'index.php/api/get_laminates_for_share',
+				type: 'POST',
+				dataType : 'JSON',
+				crossDomain: true,
+				data: {id: lam_share_set_get},
+				success : function(response){
+					window.open('sms:?body='+response.content, '_system');
+				}
+			})
+		}
+
+		$('.lam_2').click(function(){
+			$('.green_animate').animate({"left": "50%"}, 300);
+			var filter = '.'+$(this).data("filter");
+			$(".filters").hide();
+			$(".Complementry").show();
+		});
+		
+		$('.lam_1').click(function(){
+			$('.green_animate').animate({ "left": "0%" }, 300 );
+			var filter = '.'+$(this).data("filter");
+			$(".filters").hide();
+			$(".Laminates").show();
+		});
+
+		$(".border_click").click(function(){
+			console.log("triggered");
+			$(".border_click").css("border", "none");
+			$(this).css("border", "2px solid #C1D700");
+		})
+
+		function gotohomescreen(){
+			page_id = "#home";
+			$("#laminate_selector").fadeOut();
+			$("#loader").show();
+			if (lam_back_page == 'color_pallete') {
+				$("#loader").hide();
+				$("#color_pallete").fadeIn();
+			} else if (lam_back_page = 'select_color') {
+				$("#loader").hide();
+				$("#select_color").fadeIn();
+			} else {
+				$("#loader").hide();
+				$("#home").fadeIn();
+			}
+			lam_id = '';
+		}
+
+		function gotoEdgeband(){
+			if (lam_id == '') {
+				alert("Please Select Laminate...!!! :)");
+			} else {
+
+				$("#laminate_selector").fadeOut();
+				$("#loader").show();
+				document.addEventListener("backbutton", backbuttomlaminatepageback, false);
+				$.ajax({
+					url : base_url + 'index.php/api/get_edgeband',
+					dataType : 'JSON',
+					crossDomain: true,
+					success : function(response){
+						var html = '';
+						$.each(response, function(index, value){
+							html += '<div data-sr="wait 0.1s and then ease-in-out 100px" data-id="'+value.id+'" data-content="'+value.content+'" data-image="'+value.image+'" class="color_sub1 edgeband_click">'+
+									'<div class="color_s posr">'+
+									'<img src="'+img_url+value.image+'" style="height: 75px" class="wdh" alt="" />'+
+									'<img src="images/heart-icon.png" class="heart_icon hide" alt="" />'+
+									'</div>'+
+									'<p class="title_text">'+value.title+'</p>'+
+									'</div>';
+						})
+
+						$("#edgeband_list").empty();
+						$("#edgeband_list").append(html);
+						$("#laminate_img").attr("src", img_url+lam_image);
+						$("#laminate_img").css("height", "35px");
+					    $("#laminate_img").css("border-radius", "15px");
+
+					    $.ajax({
+					        url: base_url+'index.php/api/get_state',
+					        type: "POST",
+					        crossDomain: true,
+					        dataType: 'JSON',
+					        success: function(response){
+					            $("#state, #quote_state").empty();
+					            var text = "<option value='SELECT'>State</option>"
+					            $("#state, #quote_state").append(text);
+					            $.each(response, function(index, value){
+					                var text = "<option value='"+value.id+"'>"+value.state+"</option>";
+					                $("#state, #quote_state").append(text);
+					            })
+					        }
+					    })
+
+						$(".color_sub").click(function(){
+							var color = $(this).data("color");
+							$("#color_disp").css("background", color);
+						})
+
+						$(".edgeband_click").click(function(){
+							edge_id = $(this).data("id");
+							egde_image = $(this).data("image");
+							egde_dec = $(this).data("content");
+						})
+
+						$('.color_sub,.color_s').click(function(){
+							$('.color_sub,.color_s').animate({borderTopLeftRadius: 0, borderTopRightRadius: 0, borderBottomLeftRadius: 0, borderBottomRightRadius: 0}, 100);
+							$(this).animate({borderTopLeftRadius: 10, borderTopRightRadius: 10, borderBottomLeftRadius: 10, borderBottomRightRadius: 10}, 300);
+							$('.heart_icon').fadeOut('slow');
+							$(this).find('.heart_icon').fadeIn('slow');
+						});
+					}
+				})
+				page_back_id = "#laminate_selector";
+				$("#loader").hide();
+				$("#select_edgeband").fadeIn();
+				$(".color_sub1").animate({"opacity" : "1"});
+			}
+		}
+
+		function backbuttomlaminatepageback(){
+			document.addEventListener("backbutton", backbuttomlaminatepagecoloeimage, false);
+			$(".main_section").hide();
+			$("#laminate_selector").show();
+		}
+
+		function backbuttomlaminatepagecoloeimage(){
+			document.addEventListener("backbutton", backbuttongotohomefromimagecolor, false);
+			$(".main_section").hide();
+			$("#laminate_selector").show();
+		}
+
+		function backbuttongotohomefromimagecolor(){
+			if (select_color_image == 'select_image') {
+				document.addEventListener("backbutton", backbuttongotohome, false);
+				$(".main_section").hide();
+				$("#select_color").show();
+			} else {
+				document.addEventListener("backbutton", backbuttongotohome, false);
+				$(".main_section").hide();
+				$("#color_pallete").show();
+			}
+		}
+
+		function backbuttongotohome(){
+			document.addEventListener("backbutton", onBackKeyDown, false);
+			$(".main_section").hide();
+			$("#home").show();
+		}
+
+	</script>

@@ -1,0 +1,219 @@
+
+	<div class="green_header mobile-grid-100">
+		<a href="javascript:void(0);" class="green_text" onclick="goto_home()"><img src="images/back1.png" class="back1" alt="" />Color Selector</a>
+		<img src="images/header-peacock.png" class="peacock" alt="" />
+	</div>
+
+	<div class="color_selecter mobile-grid-100">
+		<p class="color_text">Selected Color</p>
+		<div id="color_disp" class="color_picker">&nbsp;</div>
+	</div>
+
+	<div id="color_pal_main_div" class="color_box mobile-grid-80 mobile-prefix-10">
+		<!-- List will load here -->
+	</div>
+
+	<a href="javascript:void(0);" onclick="gotoLaminate()" class="proceed_click">Proceed to Select a Laminate</a>
+	<div class="green_blank"></div>
+
+	<script type="text/javascript">
+		function goto_home(){
+			page_id = "#home";
+			$("#color_pallete").fadeOut();
+			$("#home").fadeIn();
+		}
+
+		function backbuttonloginpagecolorpallete(){
+			document.addEventListener("backbutton", gobackfromcolorselectorpage, false);
+			$(".main_section").hide();
+			$("#color_pallete").show();
+		}
+
+		function gobackfromcolorselectorpage(){
+			document.addEventListener("backbutton", onBackKeyDown, false);
+			$(".main_section").hide();
+			$("#home").show();
+		}
+
+		function gobacktocolorselectorpage(){
+			document.addEventListener("backbutton", gobackfromcolorselectorpage, false);
+			$(".main_section").hide();
+			$("#color_pallete").show();
+		}
+		
+		function gotoLaminate(){
+			var color = $('#color_disp').css('background-color');
+			if (color == "rgba(0, 0, 0, 0)") {
+				alert("Please Select Color");
+			} else {
+				document.addEventListener("backbutton", gobacktocolorselectorpage, false);
+				$("#color_pallete").fadeOut();
+				$(".color_picker").css("background-image", "none");
+		        hexClr = rgbToHex(color);
+		        hexClr = hexClr.substring(1);
+		        console.log(hexClr);
+				$.ajax({
+					url : base_url+'index.php/api/get_laminates_by_color',
+					type: 'POST',
+					dataType : 'JSON',
+					crossDomain: true,
+					data: {color: hexClr},
+					success : function(response){
+						$("#laminates").empty();
+						// var html = '<ul class="gallery-items">';
+						var html = '<ul id="og-grid" class="og-grid">';
+						if (response.length == 0) {
+							html = '<p style="font-size: 1.2em">Sorry There are no Laminates</p>';
+						} else {
+							$.each(response, function(index, value){
+								html += '<li class="'+value.type+' filters lam_click_event" data-content="'+value.content+'" data-id="'+value.id+'" data-image="'+value.image+'" data-title="'+value.title+'">'+
+									'<a href="javascript:void(0);" data-largesrc="'+img_url+value.image+'" data-title="'+value.title+'" data-description="'+value.content+'">'+
+										'<img src="'+img_url+value.image+'" class="border_click" style="height: 100px" data-lamcontent="'+value.content+'" data-lamid="'+value.id+'" data-lamimage="'+value.image+'" data-lamtitle="'+value.title+'" />'+
+									'</a>'+
+								'</li>';
+							})
+							html += '</ul>';
+						}
+
+						$("#laminates").empty();
+						$("#laminates").append(html);
+						$(".Complementry").hide();
+
+						$('.border_click').click(function(){
+							$('.border_click').animate({borderTopLeftRadius: 0, borderTopRightRadius: 0, borderBottomLeftRadius: 0, borderBottomRightRadius: 0}, 100);
+							$(this).animate({borderTopLeftRadius: 10, borderTopRightRadius: 10, borderBottomLeftRadius: 10, borderBottomRightRadius: 10}, 300);
+							$(".lam_click_event").parent().parent().removeClass("og-expanded");
+							$(this).parent().parent().addClass("og-expanded");
+							var title = $(this).data("lamtitle");
+							var content = $(this).data("lamcontent");
+							var id = $(this).data("lamid");
+							var image = $(this).data("lamimage");
+							$(".og-expander").remove();
+							$(".lam_click_event").removeClass("og-expanded");
+							var html = '<div class="og-expander" style="height: auto !important;">'+
+										'<div class="og-expander-inner">'+
+										'<span class="og-close"></span>'+
+										'<div class="og-fullimg">'+
+										'<div class="og-loading"></div>'+
+										'</div>'+
+										'<div class="og-details">'+
+										'<h3>'+title+'</h3>'+
+										'<p>'+content+'</p>'+
+										'<img src="images/g1.png" class="share_set_get" onclick="share('+id+')">'+
+										'<img src="images/g2.png" class="share_set_get" onclick="set('+id+')">'+
+										'<img src="images/g3.png" class="share_set_get" width="23% !important" onclick="get('+id+')">'+
+										'</div></div></div>';
+
+										// $('.og-grid a[href^="#"]').click(function(event) {
+										// 		var id = $(this).attr("href");
+										// 		var offset = 0;
+										// 		var target = $(id).offset().top - offset;
+										// 		$('html, body').animate({scrollTop:target}, 1000);
+										// 		event.preventDefault();
+										// 	});
+								// $("#laminates").animate({
+								// 	scrollTop: $(".og-expander").offset().top}, "slow");
+
+										$(this).parent().parent().append(html);
+							$(".lam_click_event").parent().parent().removeClass("og-expanded");
+							$(this).parent().parent().addClass("og-expanded");
+
+							$(".og-close").click(function(){
+								$(".lam_click_event").removeClass("og-expanded");
+								$(".og-expander").remove();
+							})
+						});
+
+						$(".lam_click_event").click(function(){
+							lam_id = $(this).data("id");
+							lam_image = $(this).data("image");
+							lam_dec = $(this).data("content");
+							lam_title = $(this).data("title");
+							$("#disp_lam").css("background-image", "url('"+img_url+lam_image+"')");
+						})
+					}
+				})
+				lam_back_page = 'color_pallete';
+		        $("#laminate_selector").fadeIn();
+					$.getScript("js/grid.js", function(data, textStatus, jqxhr){
+						$(function() {
+							console.log("Grid Initialized");
+							Grid.init();
+						});
+		            });
+			}
+		}
+
+		function share(lam){
+			lam_share_set_get = lam;
+			$('.ovr_lay').fadeIn();
+		}
+
+		function set(lam){
+			lam_share_set_get = lam;
+			function_type = "set";
+			page_id = "#laminate_selector";
+			if (token == 'nothing') {
+				var return_res = confirm("Do you want to login to save this Laminate ?");
+				if (return_res === true ) {
+					$(".main_section").hide();
+					$("#login").fadeIn();
+					document.addEventListener("backbutton", backbuttonloginpagecolorpallete, false);
+				}
+			} else {
+				$("#laminate_selector").fadeOut();
+        		if (lam_share_set_get != '') {
+        			if (function_type == 'set') {
+	        			$.ajax({
+	        				url: base_url+'index.php/api/set',
+			                type: "POST",
+			                crossDomain: true,
+			                dataType: 'JSON',
+			                data: {
+			                    user_id : id,
+			                    type : "Set",
+			                    lam_id : lam_share_set_get,
+			                },
+			                success: function(response){
+		                		alert("We have saved Laminate in your profile");
+			                }
+	        			})
+        			}
+        			lam_share_set_get = '';
+        		}
+        		load_saved_laminates();
+			}
+		}
+
+		function get(lam){
+			lam_share_set_get = lam;
+			function_type = "get";
+			page_id = "#laminate_selector";
+			$("#laminate_selector").fadeOut();
+			lam_id = lam_share_set_get;
+			edge_id = '';
+			$("#lam_name_disp").text("Laminate - "+lam_title);
+			$("#lam_content_disp").html(lam_dec);
+			$("#lam_image_disp").attr("src", img_url+lam_image);
+			$("#lam_image_disp").css("height", "35px");
+		    $("#lam_image_disp").css("border-radius", "15px");
+    		$("#form").fadeIn();
+		    $.ajax({
+		        url: base_url+'index.php/api/get_state',
+		        type: "POST",
+		        crossDomain: true,
+		        dataType: 'JSON',
+		        success: function(response){
+		            $("#quote_state").empty();
+		            var text = "<option value='SELECT'>State</option>"
+		            $("#quote_state").append(text);
+		            $.each(response, function(index, value){
+		                var text = "<option value='"+value.id+"'>"+value.state+"</option>";
+		                $("#quote_state").append(text);
+		            })
+		        }
+		    })
+			$(":input, .check_text_box, .i_would, .radio_buttons").css("transform", "translateY(0px) scale(0.95)");
+			$(":input, .check_text_box, .i_would, .radio_buttons").animate({"opacity" : "1"});
+		}
+	</script>

@@ -1,0 +1,245 @@
+		<div class="green_header mobile-grid-100">
+			<a href="javascript:void(0);" class="green_text" onclick="gotothome()"><img src="images/back1.png" class="back1" alt="" />Select Color</a>
+			<img src="images/header-peacock.png" class="peacock" alt="" />
+		</div>
+		
+		<div class="color_selecter mobile-grid-100">
+			<p class="color_text">Selected Color</p>
+			<div id="disp_color" class="color_picker">&nbsp;</div>
+		</div>
+		
+		<div style="overflow:hidden;" class="color_box mobile-grid-100 pad0">
+			<!-- data-sr="wait 0.1s and then ease-in-out 100px" -->
+			<div id="cameraImgdiv" class="mobile-grid-100 posr pad0">
+				<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" class="wdh" id="cameraImg" onclick="getColor()" alt="" />
+				<img src="images/color-picker.png" class="c_p" id="clrpickr" alt="" />
+			</div>
+		</div>
+		
+		<a href="javascript:void(0);" onclick="gotoselectlaminate()" class="proceed_click">Proceed to Select a Laminate</a>
+		<div class="green_blank"></div>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>
+		<script type="text/javascript">
+
+			function getColor(){
+		        var canvas_image = document.getElementById("cameraImg");
+		        //var width = document.getElementById("cameraImg").width;
+		        //var height = document.getElementById("cameraImg").height;
+	            // this.canvas.getContext('2d').clearRect(0, 0, canvas_image.width, canvas_image.height);
+		        if(!canvas_image.canvas) {
+		            this.canvas = $('<canvas />')[0];
+		            this.canvas.width = canvas_image.width;
+		            this.canvas.height = canvas_image.height;
+		            this.canvas.getContext('2d').clearRect(0, 0, canvas_image.width, canvas_image.height);
+		            this.canvas.getContext('2d').drawImage(canvas_image, 0, 0, canvas_image.width, canvas_image.height);
+		        }
+		        var pixelData = this.canvas.getContext('2d').getImageData(event.offsetX, event.offsetY, 1, 1).data;
+		        var clr =  'rgba(' + pixelData[0] + ',' + pixelData[1] + ',' + pixelData[2] + ',' + pixelData[3]/255 + ')';
+		        $('#disp_color').css("background-color", clr );
+		        $("#clrpickr").css('top', event.offsetY);
+		        $("#clrpickr").css('left', event.offsetX);
+			}
+
+			function rgbToHex(color) {
+			    var bg = color.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+			    function hex(x) {
+			      return ("0" + parseInt(x).toString(16)).slice(-2);
+			    }
+			    return     "#" + hex(bg[1]) + hex(bg[2]) + hex(bg[3]);
+			}
+
+			function backbuttonloginpagesave(){
+				document.addEventListener("backbutton", gobackfromimageselectorpage, false);
+				$(".main_section").hide();
+				$("#home").show();
+			}
+
+			function gobackfromimageselectorpage(){
+				document.addEventListener("backbutton", onBackKeyDown, false);
+				$(".main_section").hide();
+				$("#home").show();
+			}
+
+			function gobacktoimageselectorpage(){
+				document.addEventListener("backbutton", gobackfromimageselectorpage, false);
+				$(".main_section").hide();
+				$("#select_color").show();
+			}
+
+			function gotoselectlaminate(){
+				$("#select_color").fadeOut();
+				$("#loader").show();
+		        var color = $('#disp_color').css('background-color');
+		        hexClr = rgbToHex(color);
+		        hexClr = hexClr.substring(1);
+		        console.log(hexClr);
+		        document.addEventListener("backbutton", gobacktoimageselectorpage, false);
+				$.ajax({
+					url : base_url+'index.php/api/get_laminates_by_color',
+					type: 'POST',
+					dataType : 'JSON',
+					crossDomain: true,
+					data: {color: hexClr},
+					success : function(response){
+						console.log("Response Recieved");
+						console.log(response);
+						$("#laminates").empty();
+						var html = '<ul id="og-grid" class="og-grid">';
+						if (response.length == 0) {
+							html = '<p style="font-size: 1.2em">Sorry There are no Laminates</p>';
+						} else {
+							$.each(response, function(index, value){
+								html += '<li class="'+value.type+' filters lam_click_event" data-content="'+value.content+'" data-id="'+value.id+'" data-image="'+value.image+'" data-title="'+value.title+'">'+
+									'<a href="javascript:void(0);" data-largesrc="'+img_url+value.image+'" data-title="'+value.title+'" data-description="'+value.content+'">'+
+										'<img src="'+img_url+value.image+'" class="border_click" style="height: 100px" data-lamcontent="'+value.content+'" data-lamid="'+value.id+'" data-lamimage="'+value.image+'" data-lamtitle="'+value.title+'" />'+
+									'</a>'+
+								'</li>';
+							})
+							html += '</ul>';
+						}
+						$("#laminates").empty();
+						$("#laminates").append(html);
+						$(".Complementry").hide();
+
+						$('.border_click').click(function(){
+							$('.color_sub,.color_s').animate({borderTopLeftRadius: 0, borderTopRightRadius: 0, borderBottomLeftRadius: 0, borderBottomRightRadius: 0}, 100);
+							$(this).animate({borderTopLeftRadius: 10, borderTopRightRadius: 10, borderBottomLeftRadius: 10, borderBottomRightRadius: 10}, 300);
+							$(".lam_click_event").parent().parent().removeClass("og-expanded");
+							$(this).parent().parent().addClass("og-expanded");
+							var title = $(this).data("lamtitle");
+							var content = $(this).data("lamcontent");
+							var id = $(this).data("lamid");
+							var image = $(this).data("lamimage");
+							$(".og-expander").remove();
+							$(".lam_click_event").removeClass("og-expanded");
+							var html = '<div class="og-expander" style="height: auto !important;">'+
+										'<div class="og-expander-inner">'+
+										'<span class="og-close"></span>'+
+										'<div class="og-fullimg">'+
+										'<div class="og-loading"></div>'+
+										'</div>'+
+										'<div class="og-details">'+
+										'<h3>'+title+'</h3>'+
+										'<p>'+content+'</p>'+
+										'<img src="images/g1.png" class="share_set_get" onclick="share_cam('+id+')">'+
+										'<img src="images/g2.png" class="share_set_get" onclick="set_cam('+id+')">'+
+										'<img src="images/g3.png" class="share_set_get" width="23% !important" onclick="get_cam('+id+')">'+
+										'</div></div></div>';
+
+							$(this).parent().parent().append(html);
+							$(".lam_click_event").parent().parent().removeClass("og-expanded");
+							$(this).parent().parent().addClass("og-expanded");
+
+							// $('.og-grid a[href^="#"]').click(function(event) {
+							// 		var id = $(this).attr("href");
+							// 		var offset = 0;
+							// 		var target = $(id).offset().top - offset;
+							// 		$('html, body').animate({scrollTop:target}, 1000);
+							// 		event.preventDefault();
+							// 	});
+							// $("#laminates").animate({
+							// 	scrollTop: $(".og-expander").offset().top}, "slow");
+
+							$(".og-close").click(function(){
+								$(".lam_click_event").removeClass("og-expanded");
+								$(".og-expander").remove();
+							})
+						});
+
+						$(".lam_click_event").click(function(){
+							lam_id = $(this).data("id");
+							lam_image = $(this).data("image");
+							lam_dec = $(this).data("content");
+							lam_title = $(this).data("title");
+							$("#disp_lam").css("background-image", "url('"+img_url+lam_image+"')");
+						})
+					}
+				})
+				$("#loader").hide();
+				lam_back_page = 'select_color';
+		        $("#laminate_selector").fadeIn();
+			}
+
+			function gotothome(){
+				page_id = "#home";
+				$("#select_color").fadeOut();
+				$("#home").fadeIn();
+			}
+
+			function share_cam(lam){
+				lam_share_set_get = lam;
+				$('.ovr_lay').fadeIn();
+			}
+
+			function set_cam(lam){
+				lam_share_set_get = lam;
+				function_type = "set";
+				page_id = "#laminate_selector";
+				if (token == 'nothing') {
+					var return_res = confirm("Do you want to login to save this Laminate ?");
+					if (return_res === true ) {
+						$(".main_section").hide();
+						$("#login").fadeIn();
+						document.addEventListener("backbutton", backbuttonloginpagesave, false);
+					}
+				} else {
+					$("#laminate_selector").fadeOut();
+	        		if (lam_share_set_get != '') {
+	        			if (function_type == 'set') {
+		        			$.ajax({
+		        				url: base_url+'index.php/api/set',
+				                type: "POST",
+				                crossDomain: true,
+				                dataType: 'JSON',
+				                data: {
+				                    user_id : id,
+				                    type : "Set",
+				                    lam_id : lam_share_set_get,
+				                },
+				                success: function(response){
+				                	if (response == 'response') {
+				                		alert("We have saved Laminate in your profile");
+				                	}
+				                }
+		        			})
+	        			}
+	        			lam_share_set_get = '';
+	        		}
+	        		load_saved_laminates();
+				}
+			}
+
+			function get_cam(lam, image, title, dec){
+				lam_share_set_get = lam;
+				function_type = "get";
+				page_id = "#laminate_selector";
+				$("#laminate_selector").fadeOut();
+				$("#loader").show();
+				lam_id = lam_share_set_get;
+				edge_id = '';
+				$("#lam_name_disp").text("Laminate - "+lam_title);
+				$("#lam_content_disp").html(lam_dec);
+				$("#lam_image_disp").attr("src", img_url+lam_image);
+				$("#lam_image_disp").css("height", "35px");
+			    $("#lam_image_disp").css("border-radius", "15px");
+			    $("#loader").hide();
+	    		$("#form").fadeIn();
+			    $.ajax({
+			        url: base_url+'index.php/api/get_state',
+			        type: "POST",
+			        crossDomain: true,
+			        dataType: 'JSON',
+			        success: function(response){
+			            $("#quote_state").empty();
+			            var text = "<option value='SELECT'>State</option>"
+			            $("#quote_state").append(text);
+			            $.each(response, function(index, value){
+			                var text = "<option value='"+value.id+"'>"+value.state+"</option>";
+			                $("#quote_state").append(text);
+			            })
+			        }
+			    })
+				$(":input, .check_text_box, .i_would, .radio_buttons").css("transform", "translateY(0px) scale(0.95)");
+				$(":input, .check_text_box, .i_would, .radio_buttons").animate({"opacity" : "1"});
+			}	
+		</script>

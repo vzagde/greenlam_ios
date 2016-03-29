@@ -1,0 +1,48 @@
+		<div class="green_header mobile-grid-100">
+			<a href="javascript:void(0);"><img src="images/menu_bar.png" class="menu_click" alt="" /></a>
+			<span class="green_text1">Talk to us</span>
+			<img src="images/header-peacock.png" class="peacock" alt="" />
+		</div>
+		
+		<div class="mobile-grid-100 contact-title">
+			<h3>Call us</h3>
+			<img src="images/hr-line.png" style="width:60%;margin-top:-10%;">
+		</div>
+		
+		<div class="mobile-grid-100 contact-icon">
+			<a href="" onclick="callUS()"><img src="images/call-icon.png"></a>
+		</div>
+		
+		<div onclick="callUS()" class="mobile-grid-100 contact-no">
+			<h3>1800-00-888</h3>
+		</div>
+		
+		
+		
+		<div class="green_blank" ></div>	
+	<script type="text/javascript">
+		$('.menu_click').click(function(){
+			event.stopPropagation();
+			$('.menu').animate({ "left": "0" }, 100 );
+		});
+
+		$('.menu_close').click(function(){
+			$('.menu').animate({ "left": "-90%" }, 100 );
+		});
+
+		(function($) {
+	
+			'use strict';
+	
+			window.sr= new scrollReveal({
+			reset: true,
+			move: '50px',
+			mobile: true
+			});
+	
+		})();
+
+		function callUS(){
+			window.open('tel:+180000888', '_system');
+		}
+	</script>

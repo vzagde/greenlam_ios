@@ -1,0 +1,310 @@
+		<div class="green_header mobile-grid-100">
+			<a href="javascript:void(0);" onclick="gobackRegister()" class="green_text"><img src="images/back1.png" class="back1" alt="" />Register</a>
+			<img src="images/header-peacock.png" class="peacock" alt="" />
+		</div>
+		
+		<div style="margin-top:10%;" class="mobile-grid-100 forgot-title">
+			<h3 style="margin-bottom:0;">Register</h3>
+			<img src="images/hr-line.png"style="width:50%;">
+		</div>
+		
+		<div style="margin-top:6%;" class="form_box pad0 mobile-grid-90 mobile-prefix-5">
+			<input data-sr="wait 0.1s and then ease-in-out 100px" type="text" name="name" id="name" placeholder="Name" class="inpt">
+			<input data-sr="wait 0.1s and then ease-in-out 100px" type="password" name="password" id="password" placeholder="Password" class="inpt">
+			<select data-sr="wait 0.3s and then ease-in-out 100px" id="state" class="inpt">
+				<option value="State">State</option>
+			</select>
+			<select data-sr="wait 0.2s and then ease-in-out 100px" id="city" class="inpt">
+				<option value="City/Town">City/Town</option>
+			</select>
+			<input data-sr="wait 0.4s and then ease-in-out 100px" maxlength="6" onfocusin="myFunction()" onfocusout="myFunctionout()" type="text" name="pin" id="pin" placeholder="Pin Code" class="inpt">
+			<input data-sr="wait 0.6s and then ease-in-out 100px" onfocusin="myFunction()" onfocusout="myFunctionout()" type="text" name="number" maxlength="10" id="number" placeholder="Contact No." class="inpt">
+			<input data-sr="wait 0.7s and then ease-in-out 100px" onfocusin="myFunction()" onfocusout="myFunctionout()" type="email" name="email" id="email" placeholder="Email ID" class="inpt">
+			<a href="javascript:void(0);" style="position: fixed;" onclick="register_user()" class="proceed_click">Done</a>
+		</div>
+		<!-- <div class="green_blank"></div> -->
+	<script type="text/javascript">
+        $('.menu_click').click(function(){
+            event.stopPropagation();
+            $('.menu').animate({ "left": "0" }, 500 );
+        });
+		
+		$('.menu_close').click(function(){
+			$('.menu').animate({ "left": "-90%" }, 100 );
+		});
+
+		function myFunction(){
+			$(".proceed_click").css("display", "none");
+			// $(".container").css("height", "80%");
+			// $(".container").css("overflow", "scroll");
+			// $(".proceed_click").css("padding", "2% 40%");
+			// $(".proceed_click").css("position", "relative");
+			// $(".green_blank").css("position", "relative");
+		}
+
+		function myFunctionout(){
+			$(".proceed_click").css("display", "block");
+			// $(".container").css("height", "100%");
+			// $(".container").css("overflow", "auto");
+			// $(".proceed_click").css("padding", "2% 0%");
+			// $(".proceed_click").css("position", "absolute");
+			// $(".green_blank").css("position", "absolute");
+		}
+
+		(function($) {
+	
+			'use strict';
+	
+			window.sr= new scrollReveal({
+			reset: true,
+			move: '50px',
+			mobile: true
+			});
+	
+		})();
+
+	    $("#state").change(function(){
+	        $.ajax({
+	            url: base_url+'index.php/api/get_city',
+	            type: "POST",
+	            crossDomain: true,
+	            dataType: 'JSON',
+	            data: {id : $(this).val()},
+	            success: function(response){
+	                $("#city").empty();
+	                var text = "<option value='SELECT'>SELECT CITY</option>"
+	                $("#city").append(text);
+	                $.each(response, function(index, value){
+	                    var text = "<option value='"+value.id+"'>"+value.city+"</option>";
+	                    $("#city").append(text);
+	                })
+	            }
+	        })
+	    })
+
+	    function gobackRegister(){
+	    	$("#register").fadeOut();
+	    	$("#login").fadeIn();
+	    }
+
+		function register_user(){
+	        var pin = /^\d{6}$/;
+	        var phoneno = /^\d{10}$/;
+	        var em_val = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+			if (!$("#name").val()) {
+				alert("Please Enter Your Name");
+			} else if (!$("#password").val()) {
+				alert("Please Eneter Password");
+			} else if (!$("#state").val()) {
+				alert("Please Select State");
+			} else if (!$("#city").val()) {
+				alert("Please Select City");
+			} else if (!$("#pin").val()) {
+				alert("Please Enter Pincode");
+	        } else if (!$("#pin").val().match(pin)) {
+	            alert("Please Enter Valid Pincode");
+			} else if (!$("#number").val()) {
+				alert("Please Enter Your Contact Number");
+	        } else if (!$("#number").val().match(phoneno)) {
+	            alert("Please Enter Valid Mobile Number");
+			} else if (!$("#email").val()) {
+				alert("Please Enter Your Email Id");
+	        } else if(!$('#email').val().match(em_val)){ 
+	            alert("Please Enter Your Valid Email Id");
+			} else {
+	            $.ajax({
+	                url: base_url+'index.php/api/register_new_user',
+	                type: "POST",
+	                crossDomain: true,
+	                dataType: 'JSON',
+	                data: {
+	                    name : $("#name").val(),
+	                    state : $("#state").val(),
+	                    city : $("#city").val(),
+	                    pincode : $("#pin").val(),
+	                    phone : $("#number").val(),
+	                    email : $("#email").val(),
+	                    password : $("#password").val(),
+	                    status : 'nothing',
+	                },
+	                success: function(response){
+	                	console.log(response);
+	                	if (response.response == "Quote") {
+	                		var c = confirm("Data related to same email id Already Exists, To proceed with old data click Ok else Cancle to update new data");
+	                		if (c == true) {
+					            $.ajax({
+					                url: base_url+'index.php/api/register_new_user',
+					                type: "POST",
+					                crossDomain: true,
+					                dataType: 'JSON',
+					                data: {
+					                    name : $("#name").val(),
+					                    state : $("#state").val(),
+					                    city : $("#city").val(),
+					                    pincode : $("#pin").val(),
+					                    phone : $("#number").val(),
+					                    email : $("#email").val(),
+					                    password : $("#password").val(),
+					                    status : 'Old Update',
+					                },
+					                success: function(response){
+				                		Lockr.set('user_token', response.token);
+				                		token = response.token;
+				                		id = response.id;
+				                		$("#menu_saved, #menu_myselection").show();
+				                		$("#profile_image").css("background", "url('"+response.profile+"') no-repeat");
+				                		$("#profile_bg").css("background", "url('"+response.profile+"') no-repeat");
+				                		$(".login_text").hide();
+				                		$(".logout_text").show();
+				                		$("#user_acc_name").text(response.name);
+				                		$("#register").fadeOut();
+						        		if (form_status == 'yes') {
+					                		$("#quote_name").val(response.data.name);
+					                		$("#quote_phone").val(response.data.phone);
+					                		$("#quote_email").val(response.data.email);
+						        			$("#form").fadeIn();
+						        			form_status = 'no';
+						        		} else if (lam_share_set_get != '') {
+						        			if (function_type == 'set') {
+							        			$.ajax({
+							        				url: base_url+'index.php/api/set',
+									                type: "POST",
+									                crossDomain: true,
+									                dataType: 'JSON',
+									                data: {
+									                    user_id : response.id,
+									                    type : "Set",
+									                    lam_id : lam_share_set_get,
+									                },
+									                success: function(response){
+									                	if (response == 'response') {
+									                		alert("We have saved Laminate in your profile");
+									                	}
+									                }
+							        			})
+						        			}
+						        			lam_share_set_get = '';
+						        			// $("#saved").fadeIn();
+						        			load_saved_laminates();
+						        		} else {
+						        			$("#home").fadeIn();
+						        		}
+					                }
+					            })
+
+	                		} else {
+					            $.ajax({
+					                url: base_url+'index.php/api/register_new_user',
+					                type: "POST",
+					                crossDomain: true,
+					                dataType: 'JSON',
+					                data: {
+					                    name : $("#name").val(),
+					                    state : $("#state").val(),
+					                    city : $("#city").val(),
+					                    pincode : $("#pin").val(),
+					                    phone : $("#number").val(),
+					                    email : $("#email").val(),
+					                    password : $("#password").val(),
+					                    status : 'New Update',
+					                },
+					                success: function(response){
+				                		Lockr.set('user_token', response.token);
+				                		token = response.token;
+				                		id = response.id;
+				                		$("#menu_saved, #menu_myselection").show();
+				                		$("#profile_image").css("background", "url('"+response.profile+"') no-repeat");
+				                		$("#profile_bg").css("background", "url('"+response.profile+"') no-repeat");
+				                		$(".login_text").hide();
+				                		$(".logout_text").show();
+				                		$("#user_acc_name").text(response.name);
+				                		$("#register").fadeOut();
+						        		if (form_status == 'yes') {
+					                		$("#quote_name").val(response.data.name);
+					                		$("#quote_phone").val(response.data.phone);
+					                		$("#quote_email").val(response.data.email);
+						        			$("#form").fadeIn();
+						        			form_status = 'no';
+						        		} else if (lam_share_set_get != '') {
+						        			if (function_type == 'set') {
+							        			$.ajax({
+							        				url: base_url+'index.php/api/set',
+									                type: "POST",
+									                crossDomain: true,
+									                dataType: 'JSON',
+									                data: {
+									                    user_id : response.id,
+									                    type : "Set",
+									                    lam_id : lam_share_set_get,
+									                },
+									                success: function(response){
+									                	if (response == 'response') {
+									                		alert("We have saved Laminate in your profile");
+									                	}
+									                }
+							        			})
+						        			}
+						        			lam_share_set_get = '';
+						        			// $("#saved").fadeIn();
+						        			load_saved_laminates();
+						        		} else {
+						        			$("#home").fadeIn();
+						        		}
+					                }
+					            })
+	                		}
+	                	} else if (response.response == "Registered") {
+	                		console.log("Already Registered");
+	                		alert("User id Already Registered with the same Email Id");
+	                		$("#register").fadeIn();
+	                	} else {
+	                		Lockr.set('user_token', response.token);
+	                		token = response.token;
+	                		id = response.id;
+	                		$("#menu_saved, #menu_myselection").show();
+	                		$("#profile_image").css("background", "url('"+response.profile+"') no-repeat");
+	                		$("#profile_bg").css("background", "url('"+response.profile+"') no-repeat");
+	                		$(".login_text").hide();
+	                		$(".logout_text").show();
+	                		$("#user_acc_name").text(response.name);
+	                		$("#register").fadeOut();
+			        		if (form_status == 'yes') {
+		                		$("#quote_name").val(response.data.name);
+		                		$("#quote_phone").val(response.data.phone);
+		                		$("#quote_email").val(response.data.email);
+			        			$("#form").fadeIn();
+			        			form_status = 'no';
+			        		} else if (lam_share_set_get != '') {
+			        			if (function_type == 'set') {
+				        			$.ajax({
+				        				url: base_url+'index.php/api/set',
+						                type: "POST",
+						                crossDomain: true,
+						                dataType: 'JSON',
+						                data: {
+						                    user_id : response.id,
+						                    type : "Set",
+						                    lam_id : lam_share_set_get,
+						                },
+						                success: function(response){
+						                	if (response == 'response') {
+						                		alert("We have saved Laminate in your profile");
+						                	}
+						                }
+				        			})
+			        			}
+			        			lam_share_set_get = '';
+			        			// $("#saved").fadeIn();
+			        			load_saved_laminates();
+			        		} else {
+								$("#home").fadeIn();
+			        		}
+	                	}
+	                }
+				})
+			}
+		}
+	</script>
+
+	

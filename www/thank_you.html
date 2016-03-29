@@ -1,0 +1,49 @@
+		<div class="green_header mobile-grid-100">
+			<a href="javascript:void(0);"><img src="images/menu_bar.png" class="menu_click" alt="" /></a>
+			<img src="images/header-peacock.png" class="peacock" alt="" />
+		</div>
+		
+		<img src="images/animat-checkmark-color.gif" class="right_gif" alt="" />
+		
+		<img data-sr="wait 0.1s and then ease-in-out" src="images/thanks.png" class="thanks" alt="" />
+		<a data-sr="wait 0.2s and then ease-in-out 50px" onclick="gotoLaminatesfromThankyou()" class="thankyoushow" href="#"><img src="images/thanks1.png" class="thanks1" alt="" /></a>
+		<a data-sr="wait 0.3s and then ease-in-out 50px" onclick="gotoHomePagefromThankyou()" class="thankyoushow" href="#"><img src="images/thanks2.png" class="thanks2" alt="" /></a>
+		
+		<img src="images/green_bottom.png" class="green_bottom" alt="" />
+		
+		<div class="green_blank"></div>
+	<script type="text/javascript">
+			$('.menu_click').click(function(){
+				event.stopPropagation();
+				$('.menu').animate({ "left": "0" }, 100 );
+			});
+			
+			$('.menu_close').click(function(){
+				$('.menu').animate({ "left": "-90%" }, 100 );
+			});
+
+		(function($) {
+	
+			'use strict';
+	
+			window.sr= new scrollReveal({
+			reset: true,
+			move: '50px',
+			mobile: true
+			});
+	
+		})();
+
+		function gotoHomePagefromThankyou(){
+			$("#thank_you").fadeOut();
+			$("#home").fadeIn();
+		}
+
+		function gotoLaminatesfromThankyou(){
+			$("#thank_you").fadeOut();
+			load_catalogue_data();
+			lam_id = '';
+			page_back_id = "#catalogue";
+			$("#catalogue").fadeIn();
+		}		
+	</script>

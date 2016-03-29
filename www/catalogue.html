@@ -1,0 +1,161 @@
+		<div class="green_header mobile-grid-100">
+			<a style="font-size:1em;" href="javascript:void(0);" onclick="gobacktoHome()" class="green_text"><img src="images/back1.png" class="back1" alt="" />Catalogue</a>
+			<img src="images/header-peacock.png" class="peacock" alt="" />
+		</div>
+		
+		<div class="laminate_tab mobile-grid-100 pad0">
+			<div class="mobile-grid-100">
+				<div id="catalogue_list" class="laminate_box cat_box posr mobile-grid-100 pad0">
+					<ul id="og-grid" class="og-grid">
+					</ul>
+				</div> 
+			</div>
+		</div>
+		
+		<div class="ovr_lay hide">
+			<div class="share_overlay">
+				<img src="images/cross.png" class="shr_close" alt="" />
+				<p class="share_text">Share via</p>
+				<div class="mobile-grid-100">
+					<div class="mobile-grid-100"><img src="images/s1.png" onclick="share_mail_cat()" class="s_1" alt="" /></div>
+					<div class="mobile-grid-100"><img src="images/s2.png" onclick="share_facebook_cat()" class="s_1" alt="" /></div>
+					<div class="mobile-grid-100"><img src="images/s3.png" onclick="share_whatsapp_cat()" class="s_1" alt="" /></div>
+					<div class="mobile-grid-100"><img src="images/s4.png" onclick="share_message_cat()" class="s_1" alt="" /></div>
+				</div>
+			</div>
+		</div>
+
+
+
+		
+		<a href="javascript:void(0);" onclick="gotoEdgebandFromCatelogue()" class="proceed_click">Proceed to Select Laminate</a>
+		<div class="green_blank"></div>
+	<script type="text/javascript">
+		(function($) {
+	
+			'use strict';
+	
+			window.sr= new scrollReveal({
+			reset: true,
+			move: '50px',
+			mobile: true
+			});
+	
+		})();
+		
+		$(function() {
+			Grid.init();
+		});
+
+		function share_mail_cat(){
+			$.ajax({
+				url : base_url+'index.php/api/get_laminates_for_share',
+				type: 'POST',
+				dataType : 'JSON',
+				crossDomain: true,
+				data: {id: lam_share_set_get},
+				success : function(response){
+					window.open('mailto:?&body='+response.content, '_system');
+				}
+			})
+		}
+		function share_facebook_cat(){
+			window.open('https://www.facebook.com/sharer/sharer.php?u=http%3A//www.greenlam.com/', '_system');
+		}
+		function share_whatsapp_cat(){
+			$.ajax({
+				url : base_url+'index.php/api/get_laminates_for_share',
+				type: 'POST',
+				dataType : 'JSON',
+				crossDomain: true,
+				data: {id: lam_share_set_get},
+				success : function(response){
+					window.open('whatsapp://send?text='+response.content, '_system');
+				}
+			})
+		}
+		function share_message_cat(){
+			$.ajax({
+				url : base_url+'index.php/api/get_laminates_for_share',
+				type: 'POST',
+				dataType : 'JSON',
+				crossDomain: true,
+				data: {id: lam_share_set_get},
+				success : function(response){
+					window.open('sms:?body='+response.content, '_system');
+				}
+			})
+		}
+
+		function gotoEdgebandFromCatelogue(){
+			if (lam_id == '') {
+				alert("Please Select Laminate...!!! :)");
+			} else {
+				document.addEventListener("backbutton", backbuttoncataloguepage, false);
+				$("#catalogue").fadeOut();
+				edge_back_page_id = 'catalogue';
+				$.ajax({
+					url : base_url + 'index.php/api/get_edgeband',
+					dataType : 'JSON',
+					crossDomain: true,
+					success : function(response){
+						var html = '';
+						$.each(response, function(index, value){
+							html += '<div data-sr="wait 0.1s and then ease-in-out 100px" data-id="'+value.id+'" data-content="'+value.content+'" data-image="'+value.image+'" class="color_sub1 cat_edgeband_click">'+
+									'<div class="color_s posr">'+
+									'<img src="'+img_url+value.image+'" style="height: 75px" class="wdh" alt="" />'+
+									'<img src="images/heart-icon.png" class="heart_icon hide" alt="" />'+
+									'</div>'+
+									'<p class="title_text">'+value.title+'</p>'+
+									'</div>';
+						})
+
+						$("#edgeband_list").empty();
+						$("#edgeband_list").append(html);
+
+						$("#laminate_img").attr("src", img_url+lam_image);
+						$("#laminate_img").css("height", "35px");
+					    $("#laminate_img").css("border-radius", "15px");
+
+						$(".color_sub").click(function(){
+							var color = $(this).data("color");
+							$("#color_disp").css("background", color);
+						})
+
+						$(".cat_edgeband_click").click(function(){
+							edge_id = $(this).data("id");
+							egde_image = $(this).data("image");
+							egde_dec = $(this).data("content");
+						})
+
+						$('.color_sub,.color_s').click(function(){
+							$('.color_sub,.color_s').animate({borderTopLeftRadius: 0, borderTopRightRadius: 0, borderBottomLeftRadius: 0, borderBottomRightRadius: 0}, 100);
+							$(this).animate({borderTopLeftRadius: 10, borderTopRightRadius: 10, borderBottomLeftRadius: 10, borderBottomRightRadius: 10}, 300);
+							$('.heart_icon').fadeOut('slow');
+							$(this).find('.heart_icon').fadeIn('slow');
+						});
+					}
+				})
+				$("#select_edgeband").fadeIn();
+				$(".color_sub1").animate({"opacity" : "1"});
+			}
+		}
+
+		function gobacktoHome() {
+			document.addEventListener("backbutton", onBackKeyDown, false);
+			$("#catalogue").hide();
+			$("#home").show();
+		}
+
+		function backbuttoncataloguepage(){
+			document.addEventListener("backbutton", backbuttonHomeScreen, false);
+			$(".main_section").hide();
+			$("#catalogue").show();
+		}
+
+		function backbuttonHomeScreen(){
+			document.addEventListener("backbutton", onBackKeyDown, false);
+			$(".main_section").hide();
+			$("#home").show();
+		}
+	</script>

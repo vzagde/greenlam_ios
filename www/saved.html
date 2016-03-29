@@ -1,0 +1,50 @@
+		<div class="green_header mobile-grid-100">
+			<a href="javascript:void(0);"><img src="images/menu_bar.png" class="menu_click" alt="" /></a>
+			<span class="green_text1">Saved</span>
+			<img src="images/header-peacock.png" class="peacock" alt="" />
+		</div>
+		
+		<div class="saved mobile-grid-90 mobile-prefix-5 pad0">
+		</div>
+		
+		<div class="ovr_lay hide">
+			<div class="share_overlay">
+				<img src="images/cross.png" class="shr_close" alt="" />
+				<p class="share_text">Share via</p>
+				<div class="mobile-grid-100">
+					<div class="mobile-grid-100"><img src="images/s1.png" onclick="share_mail_cat()" class="s_1" alt="" /></div>
+					<div class="mobile-grid-100"><img src="images/s2.png" onclick="share_facebook_cat()" class="s_1" alt="" /></div>
+					<div class="mobile-grid-100"><img src="images/s3.png" onclick="share_whatsapp_cat()" class="s_1" alt="" /></div>
+					<div class="mobile-grid-100"><img src="images/s4.png" onclick="share_message_cat()" class="s_1" alt="" /></div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="green_blank hide" ></div>
+	<script type="text/javascript">
+			$('.menu_click').click(function(){
+				event.stopPropagation();
+				$('.menu').animate({ "left": "0" }, 100 );
+			});
+			
+			$('.menu_close').click(function(){
+				$('.menu').animate({ "left": "-90%" }, 100 );
+			});
+
+			function share_saved(lam){
+				lam_share_set_get = lam;
+				$('.ovr_lay').fadeIn();
+			}
+
+		(function($) {
+	
+			'use strict';
+	
+			window.sr= new scrollReveal({
+			reset: true,
+			move: '50px',
+			mobile: true
+			});
+	
+		})();
+	</script>

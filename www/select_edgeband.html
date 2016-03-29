@@ -1,0 +1,164 @@
+		<div class="green_header mobile-grid-100">
+			<a href="javascript:void(0);" onclick="gobackLaminatesPage()" class="green_text"><img src="images/back1.png" class="back1" alt="" />Select Edgeband</a>
+			<img src="images/header-peacock.png" class="peacock" alt="" />
+		</div>
+		
+		<div class="color_selecter mobile-grid-100">
+			<p class="color_text">Selected Laminate</p>
+			<div class="color_picker1 posr">
+				<img id="laminate_img" src="images/wood.png" class="wdh" alt="" />
+				<img src="images/color-picker.png" onclick="gobackLaminatesPage()" class="color_pkr1" alt="" />
+			</div>
+		</div>
+		
+		<div id="edgeband_list" class="color_box mobile-grid-80 mobile-prefix-10">
+			<div data-sr="wait 0.1s and then ease-in-out 100px" class="color_sub1">
+				<div class="color_s posr">
+					<img src="images/laminate-selector-box.png" class="wdh" alt="" />
+					<img src="images/heart-icon.png" class="heart_icon hide" alt="" />
+				</div>
+				<p class="title_text">Title</p>
+			</div>
+			<div data-sr="wait 0.2s and then ease-in-out 100px" class="color_sub1">
+				<div class="color_s posr">
+					<img src="images/laminate-selector-box.png" class="wdh" alt="" />
+					<img src="images/heart-icon.png" class="heart_icon hide" alt="" />
+				</div>
+				<p class="title_text">Title</p>
+			</div>
+			<div data-sr="wait 0.3s and then ease-in-out 100px" class="color_sub1">
+				<div class="color_s posr">
+					<img src="images/laminate-selector-box.png" class="wdh" alt="" />
+					<img src="images/heart-icon.png" class="heart_icon hide" alt="" />
+				</div>	
+				<p class="title_text">Title</p>
+			</div>
+		</div>
+		
+		<a href="javascript:void(0);" onclick="gotoForm()" class="proceed_click">Get Laminate</a>
+		<div class="green_blank"></div>
+	<script type="text/javascript">
+		(function($) {
+	
+			'use strict';
+	
+			window.sr= new scrollReveal({
+			reset: true,
+			move: '50px',
+			mobile: true
+			});
+	
+		})();
+
+		function gobackLaminatesPage(){
+			$("#select_edgeband").fadeOut();
+			if (page_back_id == "#catalogue") {
+				load_catalogue_data();
+			} else {
+				gotoLaminate();
+			}
+			$(page_back_id).fadeIn();
+			edge_id = '';
+		}
+
+		function gotoForm(){
+			var quote_state = '';
+			var quote_city = '';
+
+			if (edge_id == '') {
+				alert("Please Select Edgeband...!!! :)");
+			} else {
+				document.addEventListener("backbutton", backbuttonformpagecatalogue, false);
+				$("#select_edgeband").fadeOut();
+			    $.ajax({
+			        url: base_url+'index.php/api/get_state',
+			        type: "POST",
+			        crossDomain: true,
+			        dataType: 'JSON',
+			        success: function(response){
+			            $("#quote_state").empty();
+			            var text = "<option value=''>State</option>"
+			            $("#quote_state").append(text);
+			            $.each(response, function(index, value){
+			                var text = "<option value='"+value.id+"'>"+value.state+"</option>";
+			                $("#quote_state").append(text);
+			            })
+			        }
+			    })
+
+				if(token != 'nothing'){
+					$.ajax({
+		                url: base_url+'index.php/api/get_user_data_by_token',
+		                type: "POST",
+		                crossDomain: true,
+		                dataType: 'JSON',
+		                data: {
+		                    token : token,
+		                },
+		                success: function(response){
+		                	if (response.response == 'Success') {
+		                		$("#quote_name").val(response.data.name);
+		                		$("#quote_pincode").val(response.data.pin);
+		                		$("#quote_phone").val(response.data.phone);
+		                		$("#quote_state").val(response.data.state);
+		                		$("#quote_city").val(response.data.city);
+		                		$("#quote_email").val(response.data.email);
+		                	}
+		                }
+					})
+				}
+
+				$("#select_edgeband").fadeOut();
+				$("#lam_name_disp").text("Laminate - "+lam_title);
+				$("#lam_content_disp").html(lam_dec);
+				$("#lam_image_disp").attr("src", img_url+lam_image);
+				$("#lam_image_disp").css("height", "35px");
+			    $("#lam_image_disp").css("border-radius", "15px");
+				$("#form").fadeIn();
+				$(":input, .check_text_box, .i_would, .radio_buttons").css("transform", "translateY(0px) scale(0.95)");
+				$(":input, .check_text_box, .i_would, .radio_buttons").animate({"opacity" : "1"});
+			}
+		}
+
+		function backbuttonformpagecatalogue(){
+			document.addEventListener("backbutton", gobackfromformcatalogue, false);
+			$(".main_section").hide();
+			$("#form").show();
+		}
+
+		function gobackfromformcatalogue(){
+			document.addEventListener("backbutton", gobackfromcataloguetohome, false);
+			$(".main_section").hide();
+			$("#select_edgeband").show();
+		}
+
+		function gobackfromcataloguetohome(){
+			if (edge_back_page_id == 'catalogue') {
+				document.addEventListener("backbutton", gobackfromtohome, false);
+				$(".main_section").hide();
+				$("#catalogue").show();
+			} else {
+				document.addEventListener("backbutton", gobackfromtocolorImage, false);
+				$(".main_section").hide();
+				$("#laminate_selector").show();
+			}
+		}
+
+		function gobackfromtocolorImage(){
+			if (select_color_image == 'select_image') {
+				document.addEventListener("backbutton", gobackfromtohome, false);
+				$(".main_section").hide();
+				$("#select_color").show();
+			} else {
+				document.addEventListener("backbutton", gobackfromtohome, false);
+				$(".main_section").hide();
+				$("#color_pallete").show();
+			}
+		}
+
+		function gobackfromtohome(){
+			document.addEventListener("backbutton", onBackKeyDown, false);
+			$(".main_section").hide();
+			$("#home").show();
+		}
+	</script>

@@ -1,0 +1,254 @@
+		<div class="green_header mobile-grid-100">
+			<a href="javascript:void(0);" onclick="gotbacktoEdgeBand()" class="green_text"><img src="images/back1.png" class="back1" alt="" />Select Edgeband</a>
+			<img src="images/header-peacock.png" class="peacock" alt="" />
+		</div>
+		
+		<div class="color_selecter mobile-grid-100">
+			<p id="lam_name_disp" class="color_text">Laminate - Title</p>
+			<div class="color_picker1 posr">
+				<img id="lam_image_disp" src="images/wood.png" class="wdh" alt="" />
+			</div>
+			<div class="mobile-grid-80 mobile-prefix-10">
+				<p id="lam_content_disp" class="form_t">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type.</p>
+				<p id="" class="form_t">Thank you for your interest in this Laminate. Please fill the form below and our expert will contact you soon.</p>
+			</div>	
+		</div>
+		
+		<div class="form_box pad0 mobile-grid-90 mobile-prefix-5">
+			<!-- <form action=""> -->
+				<div data-sr="wait 0.1s and then ease-in-out 100px" class="mobile-grid-50 check_text_box">
+					<input style="margin:3%;" type="checkbox" id="ch1" name="ch1" value=""><span class="check_text">Get Quote</span>
+				</div>
+				<div data-sr="wait 0.2s and then ease-in-out 100px" class="mobile-grid-50 check_text_box">
+					<input style="margin:3%;" type="checkbox" name="ch2" id="ch2" value=""><span class="check_text">Get Samples</span>
+				</div>
+				<input data-sr="wait 0.1s and then ease-in-out 100px" type="text" name="name" id="quote_name" placeholder="Name" class="inpt">
+				<select data-sr="wait 0.3s and then ease-in-out 100px" class="inpt" id="quote_state">
+					<option value="">State</option>
+				</select>
+				<select data-sr="wait 0.2s and then ease-in-out 100px" class="inpt" id="quote_city">
+					<option value="">City/Town</option>
+				</select>
+				<input data-sr="wait 0.4s and then ease-in-out 100px" type="text" name="pin" maxlength="6" placeholder="Pin Code" class="inpt" id="quote_pin">
+				<select data-sr="wait 0.5s and then ease-in-out 100px" class="inpt" id="quote_type">
+					<option value="">Type of Visitor</option>
+                    <option value='Architect'>Architect</option>
+                    <option value='Contractor'>Contractor</option>
+                    <option value='Dealer/Distributor'>Dealer/Distributor</option>
+                    <option value='OEM'>OEM</option>
+                    <option value='Vendor'>Vendor</option>
+                    <option value='Home Owner'>Home Owner</option>
+                    <option value='Other'>Other</option>
+				</select>
+				<input data-sr="wait 0.6s and then ease-in-out 100px" onfocusin="myFunction()" onfocusout="myFunctionout()" type="text" name="number" placeholder="Contact No." maxlength="10" id="quote_phone" class="inpt">
+				<input data-sr="wait 0.1s and then ease-in-out 100px" onfocusin="myFunction()" onfocusout="myFunctionout()" type="email" name="email" placeholder="Email ID" class="inpt" id="quote_email">
+				<p data-sr="wait 0.3s and then ease-in-out 100px" class="i_would" style="clear: both">I would prefer to be contacted via</p>
+				<div data-sr="wait 0.4s and then ease-in-out 100px" class="radio_buttons" style="margin-bottom:5%;" class="mobile-grid-100">
+					<input style="margin:3%;" type="radio" id="r1" name="r1" value=""><span style="margin-right:2%;" class="phone_text">Phone Call</span>
+					<input style="margin:3%;" type="radio" id="r2" name="r1" value=""><span class="phone_text">Email</span>
+				</div>
+				<div style="background:#1245a3; padding:2% 0;position: relative;bottom: 0;" class="mobile-grid-100">
+					<a style="position:relative;" onclick="submit_quote_form()" href="javascript:void(0);" class="proceed_click">Done</a>
+				</div>
+			<!-- </form> -->
+		</div>
+		
+		<!-- <div style="position:relative;" class="green_blank"></div> -->
+	<script type="text/javascript">
+		    $.ajax({
+		        url: base_url+'index.php/api/get_state',
+		        type: "POST",
+		        crossDomain: true,
+		        dataType: 'JSON',
+		        success: function(response){
+		            $("#state").empty();
+		            var text = "<option value='SELECT'>State</option>"
+		            $("#state").append(text);
+		            $.each(response, function(index, value){
+		                var text = "<option value='"+value.id+"'>"+value.state+"</option>";
+		                $("#state").append(text);
+		            })
+		        }
+		    })
+	
+		var quote_type = '';
+		var contact_type = '';
+		(function($) {
+	
+			'use strict';
+	
+			window.sr= new scrollReveal({
+			reset: true,
+			move: '50px',
+			mobile: true
+			});
+	
+		})();
+
+		function myFunction(){
+			// $(".container").css("height", "80%");
+			// $(".container").css("overflow", "scroll");
+			// $(".proceed_click").css("padding", "2% 40%");
+			// $(".proceed_click").css("position", "relative");
+			$(".proceed_click").css("position", "fixed");
+			// $(".green_blank").css("position", "relative");
+		}
+
+		function myFunctionout(){
+			// $(".container").css("height", "100%");
+			// $(".container").css("overflow", "auto");
+			// $(".proceed_click").css("padding", "2% 0%");
+			$(".proceed_click").css("position", "absolute");
+			// $(".green_blank").css("position", "absolute");
+		}
+
+		function gotbacktoEdgeBand(){
+			$("#form").fadeOut();
+			gotoEdgeband();
+		}
+
+	    $("#quote_state").change(function(){
+	        console.log($(this).val());
+	        $.ajax({
+	            url: base_url+'index.php/api/get_city',
+	            type: "POST",
+	            crossDomain: true,
+	            dataType: 'JSON',
+	            data: {id : $(this).val()},
+	            success: function(response){
+	                $("#quote_city").empty();
+	                var text = "<option value='SELECT'>SELECT CITY</option>"
+	                $("#quote_city").append(text);
+	                $.each(response, function(index, value){
+	                    var text = "<option value='"+value.id+"'>"+value.city+"</option>";
+	                    $("#quote_city").append(text);
+	                })
+	            }
+	        })
+	    })
+
+	    $("#r1").click(function(){
+	        if(this.checked){
+	            contact_type = "Phone";
+	        }
+	    })
+	     
+	    $("#r2").click(function(){
+	        if(this.checked){
+	            contact_type = "Email";
+	        }
+	    })
+
+	    $("#ch1, #ch2").click(function(){
+	    	if (token == 'nothing') {
+				var return_res = confirm("Do you want to login to save this Laminate ?");
+				if (return_res === true ) {
+		    		$("#form").fadeOut();
+		    		form_status = 'yes';
+		    		$("#login").fadeIn();
+		    		document.addEventListener("backbutton", gotologinpagefromform, false);
+				}
+	    	}
+	    })
+
+	    // $("#ch1").click(function(){
+	    //     quote_type = "Get Quote";
+	    //     if($(this).is(":checked") && $("input[name='ch2']").serializeArray().length != 0) {
+	    //         $('#ch2').prop('checked', false);
+	    //     }
+	    // })
+
+	    // $("#ch2").click(function(){
+	    //     quote_type = "Get Sample";
+	    //     if($(this).is(":checked") && $("input[name='ch1']").serializeArray().length != 0) {
+	    //         $('#ch1').prop('checked', false);
+	    //     }
+	    // })
+
+		function submit_quote_form(){
+			var user_id = 0;
+			if (id) {
+				user_id = id;
+			}
+			console.log(user_id);
+	        var pin = /^\d{6}$/;
+	        var phoneno = /^\d{10}$/;
+	        var em_val = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+	        console.log("Entered Fuction");
+
+			if (!$("#quote_name").val()) {
+				alert("Please Enter Your Name");
+			} else if (!$("#quote_state").val()) {
+				alert("Please Select State");
+			} else if (!$("#quote_city").val()) {
+				alert("Please Select City");
+			} else if (!$("#quote_pin").val()) {
+				alert("Please Enter Pincode");
+	        } else if (!$("#quote_pin").val().match(pin)) {
+	            alert("Please Enter Valid Pincode");
+			} else if (!$("#quote_type").val()) {
+				alert("Please Select Type of Visitor");
+			} else if (!$("#quote_phone").val()) {
+				alert("Please Enter Your Mobile Number");
+	        } else if (!$("#quote_phone").val().match(phoneno)) {
+	            alert("Please Enter Valid Mobile Number");
+			} else if (!$("#quote_email").val()) {
+				alert("Please Enter Your Email Id");
+	        } else if(!$('#quote_email').val().match(em_val)){ 
+	            alert("Please Enter Your Valid Email Id");
+	        } else if ($("input[name='ch1']").serializeArray().length == 0 && $("input[name='ch2']").serializeArray().length == 0) {
+	            alert("Please Select One of Quote / Samples", "ALERT");
+	        } else if ($("input[name='r1']").serializeArray().length == 0) {
+	            alert("Please Select One of your preferences", "ALERT");
+			} else if ($("input[name='ch2']").serializeArray().length == 0 && $("input[name='ch1']").serializeArray().length == 0) {
+				alert("Please Select One of the Options Quote / Sample");
+			} else {
+				console.log("Entered Success");
+				if ($("input[name='ch2']").serializeArray().length != 0 && $("input[name='ch1']").serializeArray().length != 0) {
+					quote_type = "Get Quote, Get Sample";
+				} else if ($("input[name='ch2']").serializeArray().length != 0) {
+					quote_type = "Get Sample";
+				} else if ($("input[name='ch1']").serializeArray().length != 0) {
+					quote_type = "Get Quote";
+				}
+
+				$.ajax({
+					url: base_url+'index.php/api/save_quote',
+		            type: "POST",
+		            crossDomain: true,
+		            dataType: 'JSON',
+		            data: {
+		            	id : user_id,
+		            	name : $("#quote_name").val(),
+		            	city : $("#quote_city").val(),
+		            	state : $("#quote_state").val(),
+		            	pincode : $("#quote_pin").val(),
+		            	type : $("#quote_type").val(),
+		            	phone : $("#quote_phone").val(),
+		            	email : $("#quote_email").val(),
+		            	quote_sample : quote_type,
+		            	contact_type : contact_type,
+		            	lam_id : lam_id,
+		            	edge_id : edge_id,
+		            },
+		            success: function(response){
+		            	console.log("Success");
+		            	console.log(response);
+		            	if (response.response == 'Success') {
+		            		$("#form").fadeOut();
+		            		$("#thank_you").fadeIn();
+		            		$(".thankyoushow").animate({"opacity":"1"});
+		            	} else {
+		            		alert("Some Issue Occured while Processign the request Please try again later");
+		            	}
+		            }
+				})
+			}
+		}
+
+		function gotologinpagefromform(){
+			document.addEventListener("backbutton", gobackfromformcatalogue, false);
+			$(".main_section").hide();
+			$("#form").show();
+		}
+	</script>

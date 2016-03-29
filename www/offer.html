@@ -1,0 +1,31 @@
+		<div class="green_header mobile-grid-100">
+			<a href="javascript:void(0);"><img src="images/menu_bar.png" class="menu_click" alt="" /></a>
+			<span class="green_text1">Offer</span>
+			<img src="images/header-peacock.png" class="peacock" alt="" />
+		</div>
+
+		<div id="offers_list">
+		</div>
+		<!--<div class="green_blank" style="position:relative;"></div>-->
+	<script type="text/javascript">
+			$('.menu_click').click(function(){
+				event.stopPropagation();
+				$('.menu').animate({ "left": "0" }, 100 );
+			});
+			
+			$('.menu_close').click(function(){
+				$('.menu').animate({ "left": "-90%" }, 100 );
+			});
+
+		// (function($) {
+	
+		// 	'use strict';
+	
+		// 	window.sr= new scrollReveal({
+		// 	reset: true,
+		// 	move: '50px',
+		// 	mobile: true
+		// 	});
+	
+		// })();
+	</script>

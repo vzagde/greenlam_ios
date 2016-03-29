@@ -1,0 +1,250 @@
+
+		<div class="banner pad0 posr mobile-grid-100">
+			<!--<img src="images/bg1.jpg" class="banner_bg" alt="" />-->
+			<div class="menu_header mobile-grid-100">
+				<a href="javascript:void(0);"><img src="images/menu_bar.png" class="menu_click" alt="" /></a>
+				<img src="images/logo.png" class="logo" alt="" />
+			</div>
+			<img data-sr="wait 0.1s and then ease-in-out 10px" src="images/logo1.png" class="logo1" alt="" />
+		</div>
+		
+		<div class="select_from posr mobile-grid-100">
+			<p class="select_text">Select from</p>
+			<div data-sr="wait 0.2s and then enter left 100px" class="mobile-grid-50">
+				<p class="select_text">Pallete</p>
+				<a href="javascript:void(0);"><img src="images/circle1.png" class="circle1" alt="" onclick="goto_select_pallet()" /></a>
+			</div>
+			<div data-sr="wait 0.2s and then enter right 100px" class="mobile-grid-50">
+				<p class="select_text">Image</p>
+				<a href="javascript:void(0);"><img src="images/circle2.png" class="circle1 cam_open" alt="" /></a>
+			</div>
+			<img src="images/top.png" class="cam_top hide" alt="" onclick="getImage('Image')" />
+			<img src="images/down.png" class="cam_bottom hide" onclick="getImage('Camera')" alt="" />
+		</div>
+		
+		<div class="green_blank"></div>
+
+		<script type="text/javascript">
+		
+			
+			$('.cam_open').click(function(){
+				//event.stopPropagation();
+				//$('.cam_top').show().animate({ top: '23%' }, 200);
+				//$('.cam_bottom').show().animate({ bottom: '-14%' }, 200);
+				$( ".cam_top,.cam_bottom" ).slideToggle();
+			});
+			
+			//$('.container').click(function(){
+			//	$('.cam_top').fadeOut().animate({ top: '15%' }, 200);
+			//	$('.cam_bottom').fadeOut().animate({ bottom: '-20%' }, 200);
+			//});
+			
+			
+			$('.menu_click').click(function(){
+				event.stopPropagation();
+				$('.menu').animate({ "left": "0" }, 100 );
+			});
+			
+			$('.menu_close').click(function(){
+				$('.menu').animate({ "left": "-90%" }, 100 );
+			});
+
+			function backbuttonloginpagesavecatalogue(){
+				document.addEventListener("backbutton", backbuttonhomescreencolor, false);
+				$(".main_section").hide();
+				$("#home").show();
+			}
+
+			function backbuttonhomescreencolor(){
+				document.addEventListener("backbutton", onBackKeyDown, false);
+				$(".main_section").hide();
+				$("#home").show();
+			}
+
+			function goto_select_pallet(){
+				$("#home").hide();
+				$("#loader").show();
+				select_color_image = 'select_color';
+				page_id = "#color_pallete";
+				lam_back_page = 'home';
+				document.addEventListener("backbutton", backbuttonhomescreencolor, false);
+				$.ajax({
+					url : base_url + 'index.php/api/get_colors',
+					dataType : 'JSON',
+					crossDomain: true,
+					success : function(response){
+						var html = '';
+						$.each(response, function(index, value){
+							html += '<div data-sr="wait 0.1s and then ease-in-out 100px" class="color_sub" data-color="'+value.hexcode+'" style="background: '+value.hexcode+' !important"></div>';
+						})
+						$("#color_pal_main_div").empty();
+						$("#color_pal_main_div").append(html);
+
+						$(".color_sub").click(function(){
+							var color = $(this).data("color");
+							$("#color_disp").css("background", color);
+							$('.color_sub').animate({borderTopLeftRadius: 0, borderTopRightRadius: 0, borderBottomLeftRadius: 0, borderBottomRightRadius: 0}, 100);
+							$(this).animate({borderTopLeftRadius: 10, borderTopRightRadius: 10, borderBottomLeftRadius: 10, borderBottomRightRadius: 10}, 300);
+						})
+					}
+				})
+				$("#loader").hide();
+				$(page_id).fadeIn();
+			}
+
+
+		    function load_catalogue_data(){
+				$.ajax({
+					url: base_url+'index.php/api/get_laminates',
+					dataType : 'JSON',
+					crossDomain: true,
+					success : function(response){
+						var html = '<ul id="og-grid" class="og-grid">';
+						$.each(response, function(index, value){
+							html += '<li class="'+value.type+' filters lam_click_event" data-content="'+value.content+'" data-id="'+value.id+'" data-image="'+value.image+'" data-title="'+value.title+'">'+
+								'<a href="javascript:void(0);" data-largesrc="'+img_url+value.image+'" data-title="'+value.title+'" data-description="'+value.content+'">'+
+									'<img src="'+img_url+value.image+'" class="border_click" style="height: 100px" data-lamcontent="'+value.content+'" data-lamid="'+value.id+'" data-lamimage="'+value.image+'" data-lamtitle="'+value.title+'" />'+
+								'</a>'+
+							'</li>';
+						})
+						html += '</ul>';
+						$("#catalogue_list").empty();
+						$("#catalogue_list").append(html);
+						$(".Complementry").hide();
+						// $("#loader").show();
+
+						$('.border_click').click(function(){
+							window.scrollBy(0, 100);
+							$('.border_click').animate({borderTopLeftRadius: 0, borderTopRightRadius: 0, borderBottomLeftRadius: 0, borderBottomRightRadius: 0}, 100);
+							$(this).animate({borderTopLeftRadius: 10, borderTopRightRadius: 10, borderBottomLeftRadius: 10, borderBottomRightRadius: 10}, 300);
+							$(".lam_click_event").parent().parent().removeClass("og-expanded");
+							$(this).parent().parent().addClass("og-expanded");
+							var title = $(this).data("lamtitle");
+							var content = $(this).data("lamcontent");
+							var id = $(this).data("lamid");
+							var image = $(this).data("lamimage");
+							$(".og-expander").remove();
+							$(".lam_click_event").removeClass("og-expanded");
+							var html = '<div class="og-expander" style="height: auto !important;">'+
+										'<div class="og-expander-inner">'+
+										'<span class="og-close"></span>'+
+										'<div class="og-fullimg">'+
+										'<div class="og-loading"></div>'+
+										'</div>'+
+										'<div class="og-details">'+
+										'<h3>'+title+'</h3>'+
+										'<p>'+content+'</p>'+
+										'<img src="images/g1.png" class="share_set_get" onclick="share_cat('+id+')">'+
+										'<img src="images/g2.png" class="share_set_get" onclick="set_cat('+id+')">'+
+										'<img src="images/g3.png" class="share_set_get" width="23% !important" onclick="get_cat('+id+')">'+
+										'</div></div></div>';
+							$(this).parent().parent().append(html);
+							$(".lam_click_event").parent().parent().removeClass("og-expanded");
+							// $("#laminates").animate({
+							// 	scrollTop: $(".og-expander").offset().top}, "slow");							
+
+							$(this).parent().parent().addClass("og-expanded");
+										// $('.og-grid a[href^="#"]').click(function(event) {
+										// 		var id = $(this).attr("href");
+										// 		var offset = 0;
+										// 		var target = $(id).offset().top - offset;
+										// 		$('html, body').animate({scrollTop:target}, 1000);
+										// 		event.preventDefault();
+										// 	});
+
+							$(".og-close").click(function(){
+								$(".lam_click_event").removeClass("og-expanded");
+								$(".og-expander").remove();
+								window.scrollBy(0, -100);
+							})
+						});
+
+						$(".lam_click_event").click(function(){
+							lam_id = $(this).data("id");
+							lam_image = $(this).data("image");
+							lam_dec = $(this).data("content");
+							lam_title = $(this).data("title");
+						})
+
+					}
+				})
+		    }
+
+			function share_cat(lam){
+				lam_share_set_get = lam;
+				$('.ovr_lay').fadeIn();
+			}
+
+			function set_cat(lam){
+				lam_share_set_get = lam;
+				function_type = "set";
+				page_id = "#laminate_selector";
+				console.log(lam);
+				console.log(lam_share_set_get);
+				if (token == 'nothing') {
+					var return_res = confirm("Do you want to login to save this Laminate ?");
+					if (return_res === true ) {
+						$(".main_section").hide();
+						$("#login").fadeIn();
+						document.addEventListener("backbutton", backbuttonloginpagesavecatalogue, false);
+					}
+				} else {
+	        		$(".main_section").hide();
+	        		if (lam_share_set_get != '') {
+	        			if (function_type == 'set') {
+		        			$.ajax({
+		        				url: base_url+'index.php/api/set',
+				                type: "POST",
+				                crossDomain: true,
+				                dataType: 'JSON',
+				                data: {
+				                    user_id : id,
+				                    type : "Set",
+				                    lam_id : lam_share_set_get,
+				                },
+				                success: function(response){
+			                		alert("Laminate Saved Successfully");
+				                }
+		        			})
+	        			}
+	        			lam_share_set_get = '';
+	        		}
+	        		load_saved_laminates();
+				}
+			}
+
+			function get_cat(lam){
+				console.log(lam);
+				lam_share_set_get = lam;
+				function_type = "get";
+				page_id = "#laminate_selector";
+				$("#catalogue").fadeOut();
+				$("#loader").show();
+				lam_id = lam_share_set_get;
+				edge_id = '';
+				$("#lam_name_disp").text("Laminate - "+lam_title);
+				$("#lam_content_disp").html(lam_dec);
+				$("#lam_image_disp").attr("src", img_url+lam_image);
+				$("#lam_image_disp").css("height", "35px");
+			    $("#lam_image_disp").css("border-radius", "15px");
+			    $("#loader").hide();
+	    		$("#form").fadeIn();
+			    $.ajax({
+			        url: base_url+'index.php/api/get_state',
+			        type: "POST",
+			        crossDomain: true,
+			        dataType: 'JSON',
+			        success: function(response){
+			            $("#quote_state").empty();
+			            var text = "<option value='SELECT'>State</option>"
+			            $("#quote_state").append(text);
+			            $.each(response, function(index, value){
+			                var text = "<option value='"+value.id+"'>"+value.state+"</option>";
+			                $("#quote_state").append(text);
+			            })
+			        }
+			    })
+				$(":input, .check_text_box, .i_would, .radio_buttons").css("transform", "translateY(0px) scale(0.95)");
+				$(":input, .check_text_box, .i_would, .radio_buttons").animate({"opacity" : "1"});
+			}			
+		</script>
