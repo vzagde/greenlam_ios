@@ -58,7 +58,9 @@
 				type: 'POST',
 				dataType : 'JSON',
 				crossDomain: true,
-				data: {id: lam_share_set_get},
+				data: {
+					id: lam_share_set_get
+				},
 				success : function(response){
 					window.open('mailto:?&body='+response.content, '_system');
 				}
@@ -197,7 +199,7 @@
 					}
 				})
 				page_back_id = "#laminate_selector";
-				$("#loader").hide();
+				$('#loader').fadeOut();
 				$("#select_edgeband").fadeIn();
 				$(".color_sub1").animate({"opacity" : "1"});
 			}

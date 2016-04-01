@@ -46,6 +46,7 @@
 
 		$(".no_account").click(function(){
 			$("#login").fadeOut();
+			$('#loader').show();
 		    $.ajax({
 		        url: base_url+'index.php/api/get_state',
 		        type: "POST",
@@ -61,7 +62,7 @@
 		            })
 		        }
 		    })
-
+		    $('#loader').fadeOut();
 			$("#register").fadeIn();
 			$(":input").css("transform", "translateY(0px) scale(0.95)");
 			$(":input").animate({"opacity" : "1"});
@@ -89,6 +90,7 @@
 	                	console.log(form_status);
 	                	if (response.response == "Login") {
 	                		$("#login").fadeOut();
+	                		$('#loader').show();
 	                		Lockr.set('user_token', response.token);
 	                		token = response.token;
 	                		id = response.id;
@@ -125,6 +127,7 @@
 				        			})
 			        			}
 			        			// $("#saved").fadeIn();
+			        			$('#loader').fadeOut();
 			        			load_saved_laminates();
 			        		} else {
 			        			$("#home").fadeIn();

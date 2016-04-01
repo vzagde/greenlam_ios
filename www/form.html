@@ -9,12 +9,12 @@
 				<img id="lam_image_disp" src="images/wood.png" class="wdh" alt="" />
 			</div>
 			<div class="mobile-grid-80 mobile-prefix-10">
-				<p id="lam_content_disp" class="form_t">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type.</p>
+				<p id="lam_content_disp" style="display: none;" class="form_t">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type.</p>
 				<p id="" class="form_t">Thank you for your interest in this Laminate. Please fill the form below and our expert will contact you soon.</p>
 			</div>	
 		</div>
 		
-		<div class="form_box pad0 mobile-grid-90 mobile-prefix-5">
+		<div class="form_box pad0 mobile-grid-100" style="border-bottom: 4px solid #d1e140">
 			<!-- <form action=""> -->
 				<div data-sr="wait 0.1s and then ease-in-out 100px" class="mobile-grid-50 check_text_box">
 					<input style="margin:3%;" type="checkbox" id="ch1" name="ch1" value=""><span class="check_text">Get Quote</span>
@@ -52,6 +52,13 @@
 				</div>
 			<!-- </form> -->
 		</div>
+
+		<style>
+			#quote_state, #quote_city, #quote_type {
+				background: url('http://lemonysnicketlibrary.com/static/grappelli/images/icons/pulldown-handler_hover.png') no-repeat right #d1e140;
+    			background: url('http://lemonysnicketlibrary.com/static/grappelli/images/icons/pulldown-handler_hover.png') no-repeat right #d1e140;
+			}
+		</style>
 		
 		<!-- <div style="position:relative;" class="green_blank"></div> -->
 	<script type="text/javascript">
@@ -212,6 +219,11 @@
 					quote_type = "Get Quote";
 				}
 
+				console.log('edge id: '+edge_id);
+				if (edge_id == '' || edge_id == null || edge_id == undefined) {
+					edge_id = 0;
+				}
+
 				$.ajax({
 					url: base_url+'index.php/api/save_quote',
 		            type: "POST",
@@ -232,8 +244,9 @@
 		            	edge_id : edge_id,
 		            },
 		            success: function(response){
-		            	console.log("Success");
+		            	console.log("Success: "+response);
 		            	console.log(response);
+		            	edge_id = '';
 		            	if (response.response == 'Success') {
 		            		$("#form").fadeOut();
 		            		$("#thank_you").fadeIn();
@@ -241,6 +254,10 @@
 		            	} else {
 		            		alert("Some Issue Occured while Processign the request Please try again later");
 		            	}
+		            },
+		            error: function(response) {
+		            	response = JSON.stringify(response);
+		            	console.log('error: '+response)
 		            }
 				})
 			}

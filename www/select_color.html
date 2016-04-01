@@ -155,7 +155,7 @@
 						})
 					}
 				})
-				$("#loader").hide();
+				$('#loader').fadeOut();
 				lam_back_page = 'select_color';
 		        $("#laminate_selector").fadeIn();
 			}
@@ -184,6 +184,7 @@
 					}
 				} else {
 					$("#laminate_selector").fadeOut();
+					$('#loader').show();
 	        		if (lam_share_set_get != '') {
 	        			if (function_type == 'set') {
 		        			$.ajax({
@@ -205,6 +206,7 @@
 	        			}
 	        			lam_share_set_get = '';
 	        		}
+	        		$('#loader').fadeOut();
 	        		load_saved_laminates();
 				}
 			}
@@ -222,7 +224,7 @@
 				$("#lam_image_disp").attr("src", img_url+lam_image);
 				$("#lam_image_disp").css("height", "35px");
 			    $("#lam_image_disp").css("border-radius", "15px");
-			    $("#loader").hide();
+			    $('#loader').fadeOut();
 	    		$("#form").fadeIn();
 			    $.ajax({
 			        url: base_url+'index.php/api/get_state',

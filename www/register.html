@@ -22,7 +22,13 @@
 			<input data-sr="wait 0.7s and then ease-in-out 100px" onfocusin="myFunction()" onfocusout="myFunctionout()" type="email" name="email" id="email" placeholder="Email ID" class="inpt">
 			<a href="javascript:void(0);" style="position: fixed;" onclick="register_user()" class="proceed_click">Done</a>
 		</div>
-		<!-- <div class="green_blank"></div> -->
+		<div class="green_blank"></div>
+		<style>
+			#state, #city {
+				background: url('http://lemonysnicketlibrary.com/static/grappelli/images/icons/pulldown-handler_hover.png') no-repeat right #d1e140;
+    			background: url('http://lemonysnicketlibrary.com/static/grappelli/images/icons/pulldown-handler_hover.png') no-repeat right #d1e140;
+			}
+		</style>
 	<script type="text/javascript">
         $('.menu_click').click(function(){
             event.stopPropagation();
@@ -220,10 +226,12 @@
 				                		$(".logout_text").show();
 				                		$("#user_acc_name").text(response.name);
 				                		$("#register").fadeOut();
+				                		$('#loader').show();
 						        		if (form_status == 'yes') {
 					                		$("#quote_name").val(response.data.name);
 					                		$("#quote_phone").val(response.data.phone);
 					                		$("#quote_email").val(response.data.email);
+					                		$('#loader').fadeOut();
 						        			$("#form").fadeIn();
 						        			form_status = 'no';
 						        		} else if (lam_share_set_get != '') {
@@ -246,9 +254,11 @@
 							        			})
 						        			}
 						        			lam_share_set_get = '';
-						        			// $("#saved").fadeIn();
+						        			// $("#saved").fadeIn()
+						        			$('#loader').fadeOut();;
 						        			load_saved_laminates();
 						        		} else {
+						        			$('#loader').fadeOut();
 						        			$("#home").fadeIn();
 						        		}
 					                }

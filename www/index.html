@@ -197,70 +197,88 @@
 	    })
 
 	    $("#menu_laminates").click(function(){
+	    	$('#loader').show();
 	    	document.addEventListener("backbutton", onBackKeyDown, false);
 	    	$(".main_section").fadeOut();
 			$('.menu').animate({ "left": "-90%" }, 100 );
 			
 			load_catalogue_data();
 			page_back_id = "#catalogue";
+			$('#loader').fadeOut();
 			$("#catalogue").fadeIn();
 	    })
 
 	    $("#menu_saved").click(function(){
+	    	$('#loader').show();
 	    	document.addEventListener("backbutton", onBackKeyDown, false);
 	    	$(".main_section").fadeOut();
 			$('.menu').animate({ "left": "-90%" }, 100 );
+			$('#loader').fadeOut();
 			load_saved_laminates();
 	    })
 
 	    $("#menu_myselection").click(function(){
+	    	$('#loader').show();
 	    	document.addEventListener("backbutton", onBackKeyDown, false);
 	    	$(".main_section").fadeOut();
 			$('.menu').animate({ "left": "-90%" }, 100 );
+			$('#loader').fadeOut();
 			load_my_selections();
 	    })
 
 	    $("#menu_offers").click(function(){
+	    	$('#loader').show();
 	    	document.addEventListener("backbutton", onBackKeyDown, false);
 	    	$(".main_section").fadeOut();
 			$('.menu').animate({ "left": "-90%" }, 100 );
+			$('#loader').fadeOut();
 			load_offers();
 	    })
 
 	    $("#menu_talktous").click(function(){
+	    	$('#loader').show();
 	    	document.addEventListener("backbutton", onBackKeyDown, false);
 	    	$(".main_section").fadeOut();
 			$('.menu').animate({ "left": "-90%" }, 100 );
+			$('#loader').fadeOut();
 			$("#contact").fadeIn();
 	    })
 
 	    $("#menu_faqs").click(function(){
+	    	$('#loader').show();
 	    	document.addEventListener("backbutton", onBackKeyDown, false);
 	    	$(".main_section").fadeOut();
 			$('.menu').animate({ "left": "-90%" }, 100 );
+			$('#loader').fadeOut();
 			load_faqs();
 	    })
 
 	    $("#menu_feedback").click(function(){
+	    	$('#loader').show();
 	    	document.addEventListener("backbutton", onBackKeyDown, false);
 	    	$(".main_section").fadeOut();
 			$('.menu').animate({ "left": "-90%" }, 100 );
+			$('#loader').fadeOut();
 			$("#feedback").fadeIn();
 			$(":input, #feedback_submit").css("transform", "translateY(0px) scale(0.95)");
 			$(":input, #feedback_submit").animate({"opacity" : "1"});
 	    })
 
 	    $("#menu_settings").click(function(){
+	    	$('#loader').show();
 	    	document.addEventListener("backbutton", onBackKeyDown, false);
 	    	$(".main_section").fadeOut();
 			$('.menu').animate({ "left": "-90%" }, 100 );
+			$('#loader').fadeOut();
 			$("#feedback").fadeIn();
 	    })
 
 	    $("#menu_aboutus").click(function(){
+	    	$('#loader').show();
 	    	document.addEventListener("backbutton", onBackKeyDown, false);
 	    	$(".main_section").fadeOut();
 			$('.menu').animate({ "left": "-90%" }, 100 );
+			$('#loader').fadeOut();
 			$("#about_us").fadeIn();
 	    })
 		
@@ -269,14 +287,17 @@
 		});
 
 	    function user_login(){
+	    	$('#loader').show();
 	    	$(".main_section").fadeOut();
 			$('.menu').animate({ "left": "-90%" }, 100 );
 			login_page = 'home';
 			document.addEventListener("backbutton", gotohomefrommenu, false);
+			$('#loader').fadeOut();
 			$("#login").fadeIn();
 	    }
 
 		function load_offers(){
+			$('#loader').show();
 			$("#offers_list").empty();
 	        $.ajax({
 	            url: base_url+'index.php/api/get_offers',
@@ -302,10 +323,13 @@
 	            	$("#offers_list").append(html);
 	            },
 	        })
+
+	        $('#loader').fadeOut();
 			$("#offer").fadeIn();
 		}
 
 		function load_faqs(){
+			$('#loader').fadeOut();
 			$("#accordion").empty();
 	        $.ajax({
 	            url: base_url+'index.php/api/get_faqs',
@@ -328,6 +352,7 @@
 	            		content.attr("class", "answer");
        	            	$("#demo_accc").append(title).append(content_main.append(content));
 	            	})
+	            	$('#loader').fadeOut();
 					$("#faq").fadeIn();
 					$.getScript("js/jquery-ui.js", function(data, textStatus, jqxhr){
 				        $(function() {
@@ -454,8 +479,10 @@
 		}
 
 		function gotohomefrommenu(){
+			$('#loader').show();
 			document.addEventListener("backbutton", onBackKeyDown, false);
 			$(".main_section").hide();
+			$('#loader').fadeOut();
 			$("#home").show();
 		}
 

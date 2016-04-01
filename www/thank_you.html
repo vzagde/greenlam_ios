@@ -9,9 +9,9 @@
 		<a data-sr="wait 0.2s and then ease-in-out 50px" onclick="gotoLaminatesfromThankyou()" class="thankyoushow" href="#"><img src="images/thanks1.png" class="thanks1" alt="" /></a>
 		<a data-sr="wait 0.3s and then ease-in-out 50px" onclick="gotoHomePagefromThankyou()" class="thankyoushow" href="#"><img src="images/thanks2.png" class="thanks2" alt="" /></a>
 		
-		<img src="images/green_bottom.png" class="green_bottom" alt="" />
+		<img src="images/green_bottom.png" style="bottom: 0%;" class="green_bottom" alt="" />
 		
-		<div class="green_blank"></div>
+		<div style="display: none;" class="green_blank"></div>
 	<script type="text/javascript">
 			$('.menu_click').click(function(){
 				event.stopPropagation();
@@ -41,9 +41,11 @@
 
 		function gotoLaminatesfromThankyou(){
 			$("#thank_you").fadeOut();
+			$('#loader').show();
 			load_catalogue_data();
 			lam_id = '';
 			page_back_id = "#catalogue";
+			$('#loader').fadeOut();
 			$("#catalogue").fadeIn();
 		}		
 	</script>

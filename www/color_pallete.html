@@ -48,6 +48,7 @@
 			} else {
 				document.addEventListener("backbutton", gobacktocolorselectorpage, false);
 				$("#color_pallete").fadeOut();
+				$('#loader').show();
 				$(".color_picker").css("background-image", "none");
 		        hexClr = rgbToHex(color);
 		        hexClr = hexClr.substring(1);
@@ -134,6 +135,7 @@
 					}
 				})
 				lam_back_page = 'color_pallete';
+				$('#loader').fadeOut();
 		        $("#laminate_selector").fadeIn();
 					$.getScript("js/grid.js", function(data, textStatus, jqxhr){
 						$(function() {
@@ -162,6 +164,7 @@
 				}
 			} else {
 				$("#laminate_selector").fadeOut();
+				$('#loader').show();
         		if (lam_share_set_get != '') {
         			if (function_type == 'set') {
 	        			$.ajax({
@@ -181,6 +184,7 @@
         			}
         			lam_share_set_get = '';
         		}
+        		$('#loader').fadeOut();
         		load_saved_laminates();
 			}
 		}
@@ -190,6 +194,7 @@
 			function_type = "get";
 			page_id = "#laminate_selector";
 			$("#laminate_selector").fadeOut();
+			$('#loader').show();
 			lam_id = lam_share_set_get;
 			edge_id = '';
 			$("#lam_name_disp").text("Laminate - "+lam_title);
@@ -197,6 +202,7 @@
 			$("#lam_image_disp").attr("src", img_url+lam_image);
 			$("#lam_image_disp").css("height", "35px");
 		    $("#lam_image_disp").css("border-radius", "15px");
+		    $('#loader').fadeOut();
     		$("#form").fadeIn();
 		    $.ajax({
 		        url: base_url+'index.php/api/get_state',

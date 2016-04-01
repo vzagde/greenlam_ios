@@ -61,7 +61,8 @@
 			edge_id = '';
 		}
 
-		function gotoForm(){
+		function gotoForm() {
+			$('#loader').show();
 			var quote_state = '';
 			var quote_city = '';
 
@@ -114,6 +115,7 @@
 				$("#lam_image_disp").attr("src", img_url+lam_image);
 				$("#lam_image_disp").css("height", "35px");
 			    $("#lam_image_disp").css("border-radius", "15px");
+			    $('#loader').fadeOut();
 				$("#form").fadeIn();
 				$(":input, .check_text_box, .i_would, .radio_buttons").css("transform", "translateY(0px) scale(0.95)");
 				$(":input, .check_text_box, .i_would, .radio_buttons").animate({"opacity" : "1"});

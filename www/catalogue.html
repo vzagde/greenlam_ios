@@ -93,6 +93,7 @@
 			} else {
 				document.addEventListener("backbutton", backbuttoncataloguepage, false);
 				$("#catalogue").fadeOut();
+				$('#loader').show();
 				edge_back_page_id = 'catalogue';
 				$.ajax({
 					url : base_url + 'index.php/api/get_edgeband',
@@ -136,6 +137,7 @@
 						});
 					}
 				})
+				$('#loader').fadeOut();
 				$("#select_edgeband").fadeIn();
 				$(".color_sub1").animate({"opacity" : "1"});
 			}
