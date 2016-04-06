@@ -62,13 +62,13 @@
 		}
 
 		function gotoForm() {
-			$('#loader').show();
 			var quote_state = '';
 			var quote_city = '';
 
 			if (edge_id == '') {
 				alert("Please Select Edgeband...!!! :)");
 			} else {
+				$('#loader').show();
 				document.addEventListener("backbutton", backbuttonformpagecatalogue, false);
 				$("#select_edgeband").fadeOut();
 			    $.ajax({

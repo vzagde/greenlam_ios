@@ -1,3 +1,4 @@
+
 		<div class="green_header mobile-grid-100">
 			<a href="javascript:void(0);" onclick="gotbacktoEdgeBand()" class="green_text"><img src="images/back1.png" class="back1" alt="" />Select Edgeband</a>
 			<img src="images/header-peacock.png" class="peacock" alt="" />
@@ -16,12 +17,6 @@
 		
 		<div class="form_box pad0 mobile-grid-100" style="border-bottom: 4px solid #d1e140">
 			<!-- <form action=""> -->
-				<div data-sr="wait 0.1s and then ease-in-out 100px" class="mobile-grid-50 check_text_box">
-					<input style="margin:3%;" type="checkbox" id="ch1" name="ch1" value=""><span class="check_text">Get Quote</span>
-				</div>
-				<div data-sr="wait 0.2s and then ease-in-out 100px" class="mobile-grid-50 check_text_box">
-					<input style="margin:3%;" type="checkbox" name="ch2" id="ch2" value=""><span class="check_text">Get Samples</span>
-				</div>
 				<input data-sr="wait 0.1s and then ease-in-out 100px" type="text" name="name" id="quote_name" placeholder="Name" class="inpt">
 				<select data-sr="wait 0.3s and then ease-in-out 100px" class="inpt" id="quote_state">
 					<option value="">State</option>
@@ -29,7 +24,7 @@
 				<select data-sr="wait 0.2s and then ease-in-out 100px" class="inpt" id="quote_city">
 					<option value="">City/Town</option>
 				</select>
-				<input data-sr="wait 0.4s and then ease-in-out 100px" type="text" name="pin" maxlength="6" placeholder="Pin Code" class="inpt" id="quote_pin">
+				<input data-sr="wait 0.4s and then ease-in-out 100px" type="tel" maxlength="6" minlength="6" name="pin" maxlength="6" placeholder="Pin Code" class="inpt" id="quote_pin">
 				<select data-sr="wait 0.5s and then ease-in-out 100px" class="inpt" id="quote_type">
 					<option value="">Type of Visitor</option>
                     <option value='Architect'>Architect</option>
@@ -40,8 +35,14 @@
                     <option value='Home Owner'>Home Owner</option>
                     <option value='Other'>Other</option>
 				</select>
-				<input data-sr="wait 0.6s and then ease-in-out 100px" onfocusin="myFunction()" onfocusout="myFunctionout()" type="text" name="number" placeholder="Contact No." maxlength="10" id="quote_phone" class="inpt">
+				<input data-sr="wait 0.6s and then ease-in-out 100px" onfocusin="myFunction()" onfocusout="myFunctionout()" type="tel" name="number" placeholder="Contact No." maxlength="10" id="quote_phone" class="inpt">
 				<input data-sr="wait 0.1s and then ease-in-out 100px" onfocusin="myFunction()" onfocusout="myFunctionout()" type="email" name="email" placeholder="Email ID" class="inpt" id="quote_email">
+				<div data-sr="wait 0.1s and then ease-in-out 100px" class="mobile-grid-50 check_text_box">
+					<input style="margin:3%;" type="checkbox" id="ch1" name="ch1" value=""><span class="check_text">Get Quote</span>
+				</div>
+				<div data-sr="wait 0.2s and then ease-in-out 100px" class="mobile-grid-50 check_text_box">
+					<input style="margin:3%;" type="checkbox" name="ch2" id="ch2" value=""><span class="check_text">Get Samples</span>
+				</div>
 				<p data-sr="wait 0.3s and then ease-in-out 100px" class="i_would" style="clear: both">I would prefer to be contacted via</p>
 				<div data-sr="wait 0.4s and then ease-in-out 100px" class="radio_buttons" style="margin-bottom:5%;" class="mobile-grid-100">
 					<input style="margin:3%;" type="radio" id="r1" name="r1" value=""><span style="margin-right:2%;" class="phone_text">Phone Call</span>
@@ -145,7 +146,7 @@
 	            contact_type = "Email";
 	        }
 	    })
-
+/*
 	    $("#ch1, #ch2").click(function(){
 	    	if (token == 'nothing') {
 				var return_res = confirm("Do you want to login to save this Laminate ?");
@@ -157,7 +158,7 @@
 				}
 	    	}
 	    })
-
+*/
 	    // $("#ch1").click(function(){
 	    //     quote_type = "Get Quote";
 	    //     if($(this).is(":checked") && $("input[name='ch2']").serializeArray().length != 0) {
@@ -247,10 +248,22 @@
 		            	console.log("Success: "+response);
 		            	console.log(response);
 		            	edge_id = '';
+						// $('#loader').show();
 		            	if (response.response == 'Success') {
-		            		$("#form").fadeOut();
-		            		$("#thank_you").fadeIn();
+		            		// $('#loader').fadeOut();
+
+		            		$("#quote_name").val('');
+							$("#quote_city").val('');
+							$("#quote_state").val('');
+							$("#quote_pin").val('');
+							$("#quote_type").val('');
+							$("#quote_phone").val('');
+							$("#quote_email").val('');
+
+							$("#form").fadeOut();
+		            		$("#thank_you").fadeIn(2000);
 		            		$(".thankyoushow").animate({"opacity":"1"});
+
 		            	} else {
 		            		alert("Some Issue Occured while Processign the request Please try again later");
 		            	}
