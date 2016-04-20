@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
+/*
 function initPushwoosh() {
     var pushNotification = cordova.require("com.pushwoosh.plugins.pushwoosh.PushNotification");
  
@@ -46,7 +46,7 @@ function initPushwoosh() {
         }
     );
 }
-
+*/
 
 var app = {
     // Application Constructor
@@ -58,16 +58,58 @@ var app = {
     // Bind any events that are required on startup. Common events are:
     // 'load', 'deviceready', 'offline', and 'online'.
     bindEvents: function() {
-        document.addEventListener('deviceready', this.onDeviceReady, false);
+        // document.addEventListener('deviceready', this.onDeviceReady, false);
     },
     // deviceready Event Handler
     //
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicitly call 'app.receivedEvent(...);'
-    onDeviceReady: function() {
-        initPushwoosh();
-        app.receivedEvent('deviceready');
-    },
+    // onDeviceReady: function() {
+        // initPushwoosh();
+        
+        // var push = PushNotification.init({ "android": {"senderID": "223767762284"},
+        //  "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
+
+        // push.on('registration', function(data) {
+        //     // data.registrationId
+        //     alert('registeration id: '+data.registrationId);
+        //     $.ajax({
+        //         url: 'http://casaestilo.in/greenlam_app_admin/index.php/api/addPush',
+        //         type: 'POST',
+        //         dataType: 'JSON',
+        //         data: {registrationId: data.registrationId},
+        //     })
+        //     .done(function() {
+        //         console.log("success");
+        //         alert('success');
+        //     })
+        //     .fail(function() {
+        //         console.log("error");
+        //         alert('error');
+        //     })
+        //     .always(function() {
+        //         console.log("complete");
+        //         alert('complete');
+        //     });
+            
+        // });
+
+        // push.on('notification', function(data) {
+        //     // data.message,
+        //     // data.title,
+        //     // data.count,
+        //     // data.sound,
+        //     // data.image,
+        //     // data.additionalData
+        //     alert(data.message);
+        // });
+
+        // push.on('error', function(e) {
+        //     // e.message
+        // });
+
+        // app.receivedEvent('deviceready');
+    // },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
         // var parentElement = document.getElementById(id);
@@ -156,4 +198,44 @@ $(function() {
     });
 });
 
+
+document.addEventListener("deviceready", onDeviceReady, false);
+var regID = '';
+function onDeviceReady() {
+    // alert('in deviceready');
+    var push = PushNotification.init({ "android": {"senderID": "223767762284"},
+    "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
+
+    push.on('registration', function(data) {
+        // alert(data.registrationId);
+        regID = data.registrationId;
+        localStorage.setItem('regID', data.registrationId);
+        $.ajax({
+            url: 'http://casaestilo.in/greenlam_app_admin/index.php/api/addPush',
+            type: 'POST',
+            dataType: 'JSON',
+            data: {registrationId: data.registrationId},
+        })
+        .done(function() {
+            console.log("success");
+            // alert('success');
+        })
+        .fail(function() {
+            console.log("error");
+            // alert('error');
+        })
+        .always(function() {
+            console.log("complete");
+            // alert('complete');
+        });
+    });
+
+    push.on('notification', function(data) {
+        document.addEventListener("resume", onResume(data.title,data.message), false);
+    });
+
+    push.on('error', function(e) {
+        // alert(e.message);
+    });
+}
 
