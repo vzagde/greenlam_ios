@@ -26,6 +26,9 @@ a,abbr,acronym,address,applet,article,aside,audio,b,big,blockquote,body,canvas,c
 
 }
 
+html, body, div, section{
+	-webkit-overflow-scrolling : touch;
+}
 
 a{
 	text-decoration:none !important;
